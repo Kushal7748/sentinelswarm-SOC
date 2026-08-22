@@ -17,6 +17,7 @@ export default function Header({
   isConnected,
   onOpenVoice,
   onOpenJudgeDemo,
+  onRunLiveDemo,
   onSelectIncident,
   events,
   eventsCount,
@@ -124,6 +125,24 @@ export default function Header({
           </span>
         </button>
 
+        {/* Run Live Attack & Defense Demo */}
+        {onRunLiveDemo && (
+          <button
+            onClick={onRunLiveDemo}
+            title="Run Full-Chain Attack & Autonomous Swarm Containment Demo"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            style={{
+              background: 'linear-gradient(135deg, #dc2626 0%, #d97706 50%, #059669 100%)',
+              color: 'white',
+              boxShadow: '0 2px 14px rgba(220,38,38,0.4)',
+              border: '1px solid rgba(220,38,38,0.4)',
+            }}
+          >
+            <Flame className="w-3.5 h-3.5 text-white animate-bounce" />
+            <span className="hidden md:inline">Run Swarm Demo</span>
+          </button>
+        )}
+
         {/* Judge Demo */}
         <button
           id="judge-demo-header-btn"
@@ -138,7 +157,7 @@ export default function Header({
           }}
         >
           <Zap className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Judge Demo</span>
+          <span className="hidden sm:inline">Judge Script</span>
         </button>
 
 

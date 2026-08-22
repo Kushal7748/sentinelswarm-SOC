@@ -187,6 +187,21 @@ export default function App() {
     }
   };
 
+  const demoIntervalRef = React.useRef(null);
+  const handleRunSwarmDemo = React.useCallback(() => {
+    if (demoIntervalRef.current) clearInterval(demoIntervalRef.current);
+    let step = 0;
+    triggerProgressiveDemoStep(0);
+    demoIntervalRef.current = setInterval(() => {
+      step += 1;
+      if (step > 6) {
+        clearInterval(demoIntervalRef.current);
+      } else {
+        triggerProgressiveDemoStep(step);
+      }
+    }, 1800);
+  }, [triggerProgressiveDemoStep]);
+
   /* ── Render active view panel ── */
   const renderContent = () => {
     switch (activeTab) {
@@ -311,6 +326,7 @@ export default function App() {
           onOpenControl={() => setIsControlOpen(true)}
           onOpenVoice={() => setIsVoiceOpen(true)}
           onOpenJudgeDemo={() => setIsJudgeDemoOpen(true)}
+          onRunLiveDemo={handleRunSwarmDemo}
           onSelectIncident={(id) => setSelectedIncidentId(id)}
           events={events}
           eventsCount={events.length}

@@ -75,12 +75,13 @@ function StepRow({ step, status, liveEvents }) {
 
   // Find relevant live events for this step
   const relevantEvents = liveEvents.filter(e => {
-    if (step.id === 'detect') return e.type?.includes('detect') || e.source_agent?.includes('detector');
-    if (step.id === 'analyse') return e.source_agent === 'analyst';
-    if (step.id === 'remediate') return e.source_agent === 'remediation';
-    if (step.id === 'decision') return e.source_agent === 'decision' || e.type?.includes('escalat');
-    if (step.id === 'contain') return e.type?.includes('contain') || e.type?.includes('isolat');
-    if (step.id === 'resolve') return e.type?.includes('resolv') || e.type?.includes('complete');
+    if (step.id === 'inject') return e.type === 'detection';
+    if (step.id === 'detect') return e.type === 'detection';
+    if (step.id === 'analyse') return e.type === 'analysis';
+    if (step.id === 'remediate') return e.type === 'remediation_proposal';
+    if (step.id === 'decision') return e.type === 'decision' || e.type === 'veto';
+    if (step.id === 'contain') return e.type === 'action_executed';
+    if (step.id === 'resolve') return e.type === 'system_ready';
     return false;
   }).slice(0, 1);
 
