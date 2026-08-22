@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { X, Mic, MicOff, Volume2, Sparkles, Radio, AlertCircle, Send } from 'lucide-react';
+import { X, Mic, MicOff, Volume2, VolumeX, Sparkles, Radio, AlertCircle, Send, Play } from 'lucide-react';
 
 const QUICK_PROMPTS = [
   "Check the status of firewall",
@@ -8,6 +8,8 @@ const QUICK_PROMPTS = [
   "Who attacked our database?",
   "Explain the latest incident",
   "Show agent health scores",
+  "How does self-healing work?",
+  "What is x402 micropayments?",
 ];
 
 export default function VoiceAssistantModal({
@@ -20,12 +22,22 @@ export default function VoiceAssistantModal({
   onProcessQuery,
   onStartListening,
   onStartBriefing,
+  onSpeakText,
 }) {
   const [textInput, setTextInput] = useState('');
 
   const handleOrbClick = useCallback(() => {
+    // Unlock speech synthesis
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.resume();
+      } catch (_) {}
+    }
+
     if (voiceState === 'SPEAKING') {
-      window.speechSynthesis?.cancel();
+      try {
+        window.speechSynthesis?.cancel();
+      } catch (_) {}
       return;
     }
     onStartListening();
@@ -39,6 +51,21 @@ export default function VoiceAssistantModal({
     onProcessQuery(q);
   };
 
+  const handlePromptClick = (p) => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.resume();
+      } catch (_) {}
+    }
+    onProcessQuery(p);
+  };
+
+  const handleReplayAnswer = () => {
+    if (lastAnswer && onProcessQuery) {
+      onProcessQuery(lastAnswer);
+    }
+  };
+
   if (!isOpen) return null;
 
   const stateColor = {
@@ -50,11 +77,11 @@ export default function VoiceAssistantModal({
   }[voiceState] || { orb: 'var(--col-primary)', glow: 'rgba(14,116,144,0.25)' };
 
   const statusLabels = {
-    IDLE:      'Say "Drishti" to begin, speak, or type your question below',
-    WAKE:      'Wake word detected! Ask Drishti your question…',
-    LISTENING: '● Drishti is listening to your query…',
-    THINKING:  'Drishti is correlating SOC telemetry…',
-    SPEAKING:  '● Drishti AI is speaking…',
+    IDLE:      'Click the Orb to Speak, or Click Any Sample Question Below',
+    WAKE:      'Wake word detected! Listening to your question…',
+    LISTENING: '● Listening… Speak your question now',
+    THINKING:  'Drishti is processing query…',
+    SPEAKING:  '🔊 Drishti AI is speaking aloud…',
   };
 
   return (
@@ -91,42 +118,32 @@ export default function VoiceAssistantModal({
           <X className="w-4 h-4" />
         </button>
 
-        <div className="relative p-6 sm:p-8 flex flex-col items-center overflow-y-auto">
+        <div className="relative p-6 sm:p-7 flex flex-col items-center overflow-y-auto">
           {/* Header Badge */}
           <div
-            className="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider mb-4"
+            className="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider mb-3"
             style={{
               background: 'var(--col-primary-pale)',
               border: '1px solid rgba(14,116,144,0.2)',
               color: 'var(--col-primary)',
             }}
           >
-            <Radio className="w-3 h-3" style={{ animation: 'pulse 1.5s infinite' }} />
-            <span>DRISHTI VOICE & Q&A AI INTERCOM</span>
+            <Radio className="w-3.5 h-3.5 text-cyan-600 animate-pulse" />
+            <span>DRISHTI VOICE AI INTERCOM</span>
           </div>
 
-          {!isSupported && (
-            <div
-              className="flex items-center gap-2 mb-3 px-3.5 py-2.5 rounded-xl text-xs"
-              style={{ background: 'var(--col-danger-pale)', color: 'var(--col-danger)', border: '1px solid rgba(190,18,60,0.2)' }}
-            >
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>Voice listening works in Chrome/Edge. You can also type questions below!</span>
-            </div>
-          )}
-
-          {/* Central Orb */}
-          <div className="relative flex items-center justify-center my-2" style={{ width: 140, height: 140 }}>
+          {/* Central Animated Orb */}
+          <div className="relative flex items-center justify-center my-1" style={{ width: 130, height: 130 }}>
             {/* Pulse rings */}
             {(voiceState === 'LISTENING' || voiceState === 'SPEAKING' || voiceState === 'WAKE') && (
               <>
                 <div
                   className="absolute rounded-full voice-ring"
-                  style={{ width: 120, height: 120, background: stateColor.glow }}
+                  style={{ width: 110, height: 110, background: stateColor.glow }}
                 />
                 <div
                   className="absolute rounded-full voice-ring-2"
-                  style={{ width: 120, height: 120, background: stateColor.glow }}
+                  style={{ width: 110, height: 110, background: stateColor.glow }}
                 />
               </>
             )}
@@ -134,7 +151,7 @@ export default function VoiceAssistantModal({
             <div
               className="absolute rounded-full"
               style={{
-                width: 110, height: 110,
+                width: 100, height: 100,
                 background: `${stateColor.glow}`,
                 border: `1.5px solid ${stateColor.orb}44`,
               }}
@@ -142,51 +159,67 @@ export default function VoiceAssistantModal({
             {/* Clickable orb */}
             <button
               onClick={handleOrbClick}
-              className="relative w-20 h-20 rounded-full flex flex-col items-center justify-center shadow-xl transition-all hover:scale-105 active:scale-95"
+              className="relative w-20 h-20 rounded-full flex flex-col items-center justify-center shadow-xl transition-all hover:scale-105 active:scale-95 cursor-pointer"
               style={{
                 background: `linear-gradient(145deg, ${stateColor.orb}ee, ${stateColor.orb}cc)`,
                 boxShadow: `0 8px 28px ${stateColor.glow}, 0 2px 8px rgba(0,0,0,0.1)`,
                 color: 'white',
               }}
-              title={voiceState === 'SPEAKING' ? 'Click to stop' : 'Click to speak'}
+              title={voiceState === 'SPEAKING' ? 'Click to stop speaking' : 'Click to speak to Drishti'}
             >
-              {voiceState === 'LISTENING' && <MicOff className="w-7 h-7" />}
-              {voiceState === 'SPEAKING'  && <Volume2 className="w-7 h-7" style={{ animation: 'bounce 0.6s infinite' }} />}
-              {voiceState === 'THINKING'  && <Sparkles className="w-7 h-7" style={{ animation: 'spin 1.2s linear infinite' }} />}
+              {voiceState === 'LISTENING' && <MicOff className="w-7 h-7 animate-pulse" />}
+              {voiceState === 'SPEAKING'  && <Volume2 className="w-7 h-7 animate-bounce" />}
+              {voiceState === 'THINKING'  && <Sparkles className="w-7 h-7 animate-spin" />}
               {(voiceState === 'IDLE' || voiceState === 'WAKE') && <Mic className="w-7 h-7" />}
             </button>
           </div>
 
           {/* State label */}
           <p
-            className="text-xs font-bold tracking-widest uppercase mb-3 text-center"
+            className="text-xs font-bold tracking-wide mb-3 text-center"
             style={{
               color: voiceState === 'LISTENING' ? 'var(--col-danger)'
                    : voiceState === 'THINKING'  ? 'var(--col-primary)'
                    : voiceState === 'SPEAKING'  ? 'var(--col-success)'
                    : voiceState === 'WAKE'      ? 'var(--col-accent)'
-                   : 'var(--col-text-faint)',
+                   : 'var(--col-text-muted)',
             }}
           >
             {statusLabels[voiceState]}
           </p>
 
-          {/* Transcript / Answer Box */}
+          {/* Transcript / Answer Box with Play Button */}
           <div
-            className="w-full rounded-2xl p-4 min-h-[70px] flex items-center justify-center mb-3 text-left"
+            className="w-full rounded-2xl p-3.5 min-h-[75px] flex flex-col justify-between mb-3 text-left transition-all"
             style={{
               background: 'var(--col-surface-1)',
-              border: '1px solid var(--col-border)',
+              border: voiceState === 'SPEAKING' ? '1.5px solid var(--col-success)' : '1px solid var(--col-border)',
+              boxShadow: voiceState === 'SPEAKING' ? '0 0 16px rgba(16,185,129,0.15)' : 'none',
             }}
           >
             {voiceState === 'LISTENING' || voiceState === 'WAKE' ? (
-              <p className="text-xs text-center code-font font-bold" style={{ color: 'var(--col-primary)' }}>
-                {liveTranscript || 'Listening… Speak your question aloud.'}
+              <p className="text-xs text-center code-font font-bold my-auto" style={{ color: 'var(--col-primary)' }}>
+                {liveTranscript || 'Listening… Speak aloud to ask Drishti'}
               </p>
             ) : (
-              <p className="text-xs leading-relaxed font-sans" style={{ color: 'var(--col-text-body)' }}>
-                {lastAnswer || 'Drishti AI online. Ask any security question below or click sample prompts.'}
-              </p>
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-cyan-700">
+                    Drishti Response
+                  </span>
+                  <button
+                    onClick={handleReplayAnswer}
+                    className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-cyan-100 hover:bg-cyan-200 text-cyan-800 transition-colors"
+                    title="Play voice audio aloud"
+                  >
+                    <Volume2 className="w-3 h-3" />
+                    <span>Replay Voice</span>
+                  </button>
+                </div>
+                <p className="text-xs leading-relaxed font-sans" style={{ color: 'var(--col-text-primary)' }}>
+                  {lastAnswer || 'Drishti AI online. Ask any security question below or click a sample prompt.'}
+                </p>
+              </div>
             )}
           </div>
 
@@ -196,7 +229,7 @@ export default function VoiceAssistantModal({
               type="text"
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
-              placeholder="Ask Drishti AI a question (e.g. 'check firewall status')..."
+              placeholder="Type any question (e.g. 'check firewall status')..."
               className="flex-1 px-3.5 py-2.5 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-sky-500 font-sans"
               style={{
                 background: 'var(--col-surface-1)',
@@ -214,36 +247,46 @@ export default function VoiceAssistantModal({
             </button>
           </form>
 
-          {/* Start Briefing button */}
-          <div className="w-full flex flex-col gap-2 mb-3">
+          {/* Start Briefing Button */}
+          <div className="w-full flex gap-2 mb-3">
             {onStartBriefing && (
               <button
-                onClick={onStartBriefing}
-                className="btn-primary w-full justify-center py-2 text-xs shadow-md"
+                onClick={() => {
+                  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+                    try { window.speechSynthesis.resume(); } catch (_) {}
+                  }
+                  onStartBriefing();
+                }}
+                className="btn-primary flex-1 justify-center py-2.5 text-xs shadow-md font-bold"
                 style={{
                   background: 'linear-gradient(135deg, var(--col-primary) 0%, var(--col-primary-mid) 100%)',
                 }}
               >
                 <Sparkles className="w-3.5 h-3.5 text-cyan-200" />
-                <span>▶ Start Judge Demo Briefing</span>
+                <span>▶ Start Judge Demo Voice Briefing</span>
               </button>
             )}
           </div>
 
           {/* Quick Prompts */}
           <div className="w-full">
-            <p className="text-[11px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--col-text-faint)' }}>
-              1-Click Sample Questions:
+            <p className="text-[11px] font-bold uppercase tracking-wider mb-2 text-stone-600">
+              1-Click Instant Voice Questions:
             </p>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
               {QUICK_PROMPTS.map((p, i) => (
                 <button
                   key={i}
-                  onClick={() => onProcessQuery(p)}
-                  className="btn-ghost text-xs px-2.5 py-1.5 rounded-xl text-left hover:bg-sky-50 hover:text-sky-700 transition-colors"
-                  style={{ fontSize: 11 }}
+                  onClick={() => handlePromptClick(p)}
+                  className="btn-ghost text-xs px-2.5 py-2 rounded-xl text-left hover:bg-sky-100 hover:text-sky-900 transition-all flex items-center justify-between group"
+                  style={{
+                    fontSize: 11,
+                    background: 'var(--col-surface-1)',
+                    border: '1px solid var(--col-border)',
+                  }}
                 >
-                  💬 {p}
+                  <span className="truncate">💬 {p}</span>
+                  <Volume2 className="w-3 h-3 opacity-40 group-hover:opacity-100 text-sky-600 shrink-0 ml-1" />
                 </button>
               ))}
             </div>

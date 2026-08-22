@@ -10,10 +10,39 @@ const WAKE_WORDS = [
 ];
 
 /**
- * High-speed local SOC Knowledge Engine
- * Provides instant (<50ms) domain-specific answers when offline or on Vercel
+ * Play a pleasant high-tech chime using Web Audio API
  */
-function getLocalKnowledgeAnswer(query) {
+function playTechChime() {
+  if (typeof window === 'undefined') return;
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = window._drishtiAudioCtx || new AudioCtx();
+    window._drishtiAudioCtx = ctx;
+    if (ctx.state === 'suspended') ctx.resume();
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.08); // A5
+
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.16);
+  } catch (_) {}
+}
+
+/**
+ * High-speed local SOC Knowledge Engine
+ * Provides instant (<10ms) domain-specific answers
+ */
+export function getLocalKnowledgeAnswer(query) {
   const q = (query || '').toLowerCase().trim();
 
   if (q.includes('firewall') || q.includes('iptables') || q.includes('port') || q.includes('block')) {
@@ -21,7 +50,7 @@ function getLocalKnowledgeAnswer(query) {
   }
 
   if (q.includes('threat') || q.includes('status') || q.includes('safe') || q.includes('nandi')) {
-    return 'Nandi Traders is currently protected by SentinelSwarm. All perimeter sensors—phishing, intrusion, and exfiltration detectors—are actively monitoring in real time with zero active breaches.';
+    return 'Nandi Traders is currently protected by SentinelSwarm. All perimeter sensors—phishing, intrusion, and exfiltration detectors—are actively monitoring in real time with zero breaches.';
   }
 
   if (q.includes('who attacked') || q.includes('attacker') || q.includes('incident') || q.includes('database') || q.includes('sqli') || q.includes('dump')) {
@@ -54,19 +83,23 @@ function getLocalKnowledgeAnswer(query) {
 export function useAlwaysOnVoice({ enabled = true } = {}) {
   const [voiceState, setVoiceState] = useState('IDLE'); // IDLE | WAKE | LISTENING | THINKING | SPEAKING
   const [liveTranscript, setLiveTranscript] = useState('');
-  const [lastAnswer, setLastAnswer] = useState('Drishti AI online. Ask any security question or click a sample prompt below.');
+  const [lastAnswer, setLastAnswer] = useState("Drishti AI online. Ask any security question below or click a sample prompt.");
   const [isSupported, setIsSupported] = useState(false);
 
   const recognizerRef = useRef(null);
   const shouldRestartRef = useRef(true);
   const silenceTimerRef = useRef(null);
+  const chromeKeepAliveRef = useRef(null);
   const voiceStateRef = useRef(voiceState);
   voiceStateRef.current = voiceState;
 
-  // Robust Text-to-Speech function
+  // Rock-solid Text-to-Speech function
   const speakText = useCallback((text) => {
     if (!text) return;
     setLastAnswer(text);
+
+    // Play tactile sound cue
+    playTechChime();
 
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       setVoiceState('IDLE');
@@ -74,99 +107,103 @@ export function useAlwaysOnVoice({ enabled = true } = {}) {
     }
 
     try {
-      window.speechSynthesis.cancel();
+      if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+        window.speechSynthesis.cancel();
+      }
       window.speechSynthesis.resume();
     } catch (_) {}
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    // Keep reference on window to prevent Chrome GC bug
-    window._drishtiUtterance = utterance;
-
-    utterance.rate = 1.05;
-    utterance.pitch = 1.0;
-
-    // Pick best English voice
-    const voices = window.speechSynthesis.getVoices() || [];
-    const preferred = voices.find(v =>
-      v.lang && v.lang.startsWith('en') &&
-      (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Alex') || v.name.includes('David'))
-    ) || voices.find(v => v.lang && v.lang.startsWith('en'));
-
-    if (preferred) utterance.voice = preferred;
-
-    utterance.onstart = () => {
-      setVoiceState('SPEAKING');
-    };
-
-    utterance.onend = () => {
-      setVoiceState('IDLE');
-      window._drishtiUtterance = null;
-      if (shouldRestartRef.current && recognizerRef.current) {
-        setTimeout(() => {
-          try { recognizerRef.current.start(); } catch (_) {}
-        }, 300);
-      }
-    };
-
-    utterance.onerror = () => {
-      setVoiceState('IDLE');
-      window._drishtiUtterance = null;
-    };
-
-    // Safety timeout in case TTS gets stuck
-    const timeoutDuration = Math.max(4000, text.length * 90);
+    // Slight delay so cancel completes cleanly in Chrome
     setTimeout(() => {
-      if (voiceStateRef.current === 'SPEAKING') {
+      try {
+        const utterance = new SpeechSynthesisUtterance(text);
+        window._drishtiUtterance = utterance;
+
+        utterance.rate = 1.02;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+
+        // Choose best available voice
+        const voices = window.speechSynthesis.getVoices() || [];
+        const preferred = voices.find(v =>
+          v.lang && v.lang.startsWith('en') &&
+          (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Alex') || v.name.includes('David') || v.name.includes('Karen'))
+        ) || voices.find(v => v.lang && v.lang.startsWith('en'));
+
+        if (preferred) utterance.voice = preferred;
+
+        utterance.onstart = () => {
+          setVoiceState('SPEAKING');
+          // Chrome speech synthesis workaround: keep alive
+          if (chromeKeepAliveRef.current) clearInterval(chromeKeepAliveRef.current);
+          chromeKeepAliveRef.current = setInterval(() => {
+            if (window.speechSynthesis.speaking) {
+              window.speechSynthesis.pause();
+              window.speechSynthesis.resume();
+            } else {
+              clearInterval(chromeKeepAliveRef.current);
+            }
+          }, 10000);
+        };
+
+        utterance.onend = () => {
+          setVoiceState('IDLE');
+          window._drishtiUtterance = null;
+          if (chromeKeepAliveRef.current) clearInterval(chromeKeepAliveRef.current);
+          if (shouldRestartRef.current && recognizerRef.current) {
+            setTimeout(() => {
+              try { recognizerRef.current.start(); } catch (_) {}
+            }, 300);
+          }
+        };
+
+        utterance.onerror = (err) => {
+          console.warn('Speech synthesis notice:', err);
+          setVoiceState('IDLE');
+          window._drishtiUtterance = null;
+          if (chromeKeepAliveRef.current) clearInterval(chromeKeepAliveRef.current);
+        };
+
+        setVoiceState('SPEAKING');
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {
+        console.error('Error starting speech synthesis:', e);
         setVoiceState('IDLE');
       }
-    }, timeoutDuration);
-
-    setVoiceState('SPEAKING');
-    try {
-      window.speechSynthesis.speak(utterance);
-    } catch (_) {
-      setVoiceState('IDLE');
-    }
+    }, 30);
   }, []);
 
-  // Process question with fast 1000ms timeout & instant local fallback
-  const processQuery = useCallback(async (query) => {
+  // Process question synchronously to guarantee user gesture activation for speech
+  const processQuery = useCallback((query) => {
     if (!query || query.trim().length < 2) return;
     const cleanQuery = query.trim();
-    setVoiceState('THINKING');
     setLiveTranscript(cleanQuery);
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200);
+    // Get instant rich answer
+    const instantAnswer = getLocalKnowledgeAnswer(cleanQuery);
+    speakText(instantAnswer);
 
-    try {
-      const res = await fetch(`${API_URL}/voice/ask`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: cleanQuery }),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        const data = await res.json();
-        const answer = data.answer || getLocalKnowledgeAnswer(cleanQuery);
-        speakText(answer);
-        return;
-      }
-    } catch (_) {
-      clearTimeout(timeoutId);
-    }
-
-    // Fallback: Use instant high-quality local SOC neural answer
-    const fallbackAnswer = getLocalKnowledgeAnswer(cleanQuery);
-    speakText(fallbackAnswer);
+    // Optional background sync with backend if available
+    fetch(`${API_URL}/voice/ask`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: cleanQuery }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.answer && data.answer !== instantAnswer) {
+          setLastAnswer(data.answer);
+        }
+      })
+      .catch(() => {});
   }, [speakText]);
 
   const startListeningManually = useCallback(() => {
     try {
-      window.speechSynthesis.cancel();
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     } catch (_) {}
 
+    playTechChime();
     setVoiceState('LISTENING');
     setLiveTranscript('');
 
@@ -181,7 +218,7 @@ export function useAlwaysOnVoice({ enabled = true } = {}) {
   const stopAll = useCallback(() => {
     shouldRestartRef.current = false;
     try {
-      window.speechSynthesis.cancel();
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     } catch (_) {}
     if (recognizerRef.current) {
       try { recognizerRef.current.stop(); } catch (_) {}
@@ -229,6 +266,7 @@ export function useAlwaysOnVoice({ enabled = true } = {}) {
 
       if (wakeDetected && voiceStateRef.current === 'IDLE') {
         setVoiceState('WAKE');
+        playTechChime();
       }
 
       // Process speech if in listening mode or wake word detected
@@ -248,17 +286,15 @@ export function useAlwaysOnVoice({ enabled = true } = {}) {
 
         if (isFinal && query.length >= 2) {
           try { rec.stop(); } catch (_) {}
-          setLiveTranscript(query);
           processQuery(query);
         } else if (query.length >= 3) {
-          // Fast auto-submit after 450ms of quiet pause
+          // Fast auto-submit after 400ms of quiet pause
           silenceTimerRef.current = setTimeout(() => {
             if (voiceStateRef.current !== 'THINKING' && voiceStateRef.current !== 'SPEAKING') {
               try { rec.stop(); } catch (_) {}
-              setLiveTranscript(query);
               processQuery(query);
             }
-          }, 450);
+          }, 400);
         }
       }
     };
@@ -290,6 +326,7 @@ export function useAlwaysOnVoice({ enabled = true } = {}) {
     return () => {
       shouldRestartRef.current = false;
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      if (chromeKeepAliveRef.current) clearInterval(chromeKeepAliveRef.current);
       try { rec.stop(); } catch (_) {}
     };
   }, [enabled, processQuery]);
@@ -305,6 +342,7 @@ export function useAlwaysOnVoice({ enabled = true } = {}) {
     lastAnswer,
     isSupported,
     processQuery,
+    speakText,
     startListeningManually,
     speakBriefing,
     stopAll,
