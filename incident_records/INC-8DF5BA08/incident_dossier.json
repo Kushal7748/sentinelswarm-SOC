@@ -1,0 +1,117 @@
+{
+  "incident_id": "INC-8DF5BA08",
+  "recorded_at": "2026-08-19 04:12:14 UTC",
+  "attack_type": "exfil",
+  "attacker_ip": "192.168.43.103",
+  "status": "BREACH_UNCONTAINED",
+  "decision_outcome": "DEFENSE_DEACTIVATED",
+  "mitre_chain": [
+    "TA0010 Exfiltration"
+  ],
+  "executive_summary": "\u26a0\ufe0f PERIMETER BREACH (DEFENSE DEACTIVATED): Adversary launched exfil against Nandi Traders. Because SentinelSwarm autonomous defense was DEACTIVATED, no firewall containment or automated remediation was applied, leaving systems exposed.",
+  "technical_narrative": "The attacker operating from IP\u202f192.168.43.103 initiated a data\u2011exfiltration activity targeting confidential personally identifiable information (PII). This activity was captured by the TA0010 Exfiltration detector, which logged a stream of outbound data matching the PII signatures. The detection confirms that the attacker successfully transferred the sensitive data out of the environment.",
+  "custom_notes": "",
+  "total_events_captured": 4,
+  "folder_path": "D:\\karthik\\software\\SentinelSwarm-LaptopB\\incident_records\\INC-8DF5BA08",
+  "events": [
+    {
+      "id": "f4201d72-2330-4b79-bfc8-6ad78c26c0f1",
+      "ts": "2026-08-19T04:12:07.919582+00:00",
+      "incident_id": "INC-8DF5BA08",
+      "source_agent": "detector.exfil",
+      "type": "detection",
+      "mitre_stage": "TA0010 Exfiltration",
+      "confidence": 0.99,
+      "risk": "high",
+      "payload_json": "{\"title\": \"Confidential PII Data Exfiltration Stream Detected\", \"destination_port\": \"9000\", \"indicators\": [\"3 email addresses staged\", \"3 credit card numeric sequences staged\", \"3 SSN/ID identifiers found\"], \"payload_size_bytes\": 197, \"sample_preview\": \"EXFIL_STREAM: customer_records.csv\\njohn.doe@example.com,4111-2221-3334-9999,987-65-4321\\nsarah.c@company.org,5500-0001-2233-4455,123-45-6789\\nrajesh.k@n\"}",
+      "payload": {
+        "title": "Confidential PII Data Exfiltration Stream Detected",
+        "destination_port": "9000",
+        "indicators": [
+          "3 email addresses staged",
+          "3 credit card numeric sequences staged",
+          "3 SSN/ID identifiers found"
+        ],
+        "payload_size_bytes": 197,
+        "sample_preview": "EXFIL_STREAM: customer_records.csv\njohn.doe@example.com,4111-2221-3334-9999,987-65-4321\nsarah.c@company.org,5500-0001-2233-4455,123-45-6789\nrajesh.k@n"
+      }
+    },
+    {
+      "id": "88a36150-ef39-4662-a47d-bd10a91f060d",
+      "ts": "2026-08-19T04:12:11.280233+00:00",
+      "incident_id": "INC-8DF5BA08",
+      "source_agent": "analyst",
+      "type": "analysis",
+      "mitre_stage": "TA0010 Exfiltration",
+      "confidence": 0.94,
+      "risk": "high",
+      "payload_json": "{\"incident_id\": \"INC-8DF5BA08\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The attacker operating from IP\\u202f192.168.43.103 initiated a data\\u2011exfiltration activity targeting confidential personally identifiable information (PII). This activity was captured by the TA0010 Exfiltration detector, which logged a stream of outbound data matching the PII signatures. The detection confirms that the attacker successfully transferred the sensitive data out of the environment.\", \"mitre_chain\": [\"TA0010 Exfiltration\"], \"correlated_events_count\": 1, \"severity\": \"HIGH\"}",
+      "payload": {
+        "incident_id": "INC-8DF5BA08",
+        "attacker_ip": "192.168.43.103",
+        "narrative": "The attacker operating from IP\u202f192.168.43.103 initiated a data\u2011exfiltration activity targeting confidential personally identifiable information (PII). This activity was captured by the TA0010 Exfiltration detector, which logged a stream of outbound data matching the PII signatures. The detection confirms that the attacker successfully transferred the sensitive data out of the environment.",
+        "mitre_chain": [
+          "TA0010 Exfiltration"
+        ],
+        "correlated_events_count": 1,
+        "severity": "HIGH"
+      }
+    },
+    {
+      "id": "4ba22d63-8168-496b-8b12-02a422bf340c",
+      "ts": "2026-08-19T04:12:12.714526+00:00",
+      "incident_id": "INC-8DF5BA08",
+      "source_agent": "remediation",
+      "type": "remediation_proposal",
+      "mitre_stage": null,
+      "confidence": 0.88,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-8DF5BA08\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+      "payload": {
+        "incident_id": "INC-8DF5BA08",
+        "options": [
+          {
+            "action": "isolate_ip",
+            "target": "192.168.43.103",
+            "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+            "confidence": 0.88,
+            "risk": "low"
+          },
+          {
+            "action": "terminate_active_sessions",
+            "target": "all_unauthenticated",
+            "description": "Revoke active web sessions and invalidate token pools",
+            "confidence": 0.72,
+            "risk": "medium"
+          },
+          {
+            "action": "quarantine_target_service",
+            "target": "port_5000",
+            "description": "Quarantine company web server port to isolated VLAN",
+            "confidence": 0.45,
+            "risk": "high"
+          }
+        ],
+        "recommended_action": "isolate_ip"
+      }
+    },
+    {
+      "id": "cc28384d-dddc-49bc-8c2e-38d5a06c1f5e",
+      "ts": "2026-08-19T04:12:14.950584+00:00",
+      "incident_id": "INC-8DF5BA08",
+      "source_agent": "decision",
+      "type": "breach_uncontained",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "critical",
+      "payload_json": "{\"incident_id\": \"INC-8DF5BA08\", \"target\": \"192.168.43.103\", \"status\": \"BREACH_UNCONTAINED\", \"warning\": \"\\u26a0\\ufe0f SENTINELSWARM DEFENSE IS DEACTIVATED: Attack breached Nandi Traders without automated firewall containment!\", \"outcome\": \"DEFENSE_DEACTIVATED\"}",
+      "payload": {
+        "incident_id": "INC-8DF5BA08",
+        "target": "192.168.43.103",
+        "status": "BREACH_UNCONTAINED",
+        "warning": "\u26a0\ufe0f SENTINELSWARM DEFENSE IS DEACTIVATED: Attack breached Nandi Traders without automated firewall containment!",
+        "outcome": "DEFENSE_DEACTIVATED"
+      }
+    }
+  ]
+}

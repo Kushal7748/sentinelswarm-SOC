@@ -1,0 +1,241 @@
+[
+  {
+    "id": "e02d7d16-45ad-435c-991e-60edef6dc4c3",
+    "ts": "2026-08-22T14:22:50.505165+00:00",
+    "incident_id": "INC-5486BE27",
+    "source_agent": "detector.intrusion",
+    "type": "detection",
+    "mitre_stage": "TA0001 Initial Access",
+    "confidence": 0.96,
+    "risk": "high",
+    "payload_json": "{\"title\": \"SQL Injection Signature Identified\", \"source_ip\": \"192.168.43.103\", \"matched_pattern\": \"UNION\\\\s+SELECT\", \"log_entry\": \"POST /login HTTP/1.1 200 - user=' UNION SELECT * FROM users --\", \"target_endpoint\": \"/login\"}",
+    "payload": {
+      "title": "SQL Injection Signature Identified",
+      "source_ip": "192.168.43.103",
+      "matched_pattern": "UNION\\s+SELECT",
+      "log_entry": "POST /login HTTP/1.1 200 - user=' UNION SELECT * FROM users --",
+      "target_endpoint": "/login"
+    }
+  },
+  {
+    "id": "c38c27a7-1fe8-4296-976f-344759cd7e72",
+    "ts": "2026-08-22T14:22:50.558730+00:00",
+    "incident_id": "INC-5486BE27",
+    "source_agent": "detector.exfil",
+    "type": "detection",
+    "mitre_stage": "TA0010 Exfiltration",
+    "confidence": 0.95,
+    "risk": "high",
+    "payload_json": "{\"title\": \"Confidential PII Data Exfiltration Stream Detected\", \"destination_port\": \"9000\", \"indicators\": [\"3 email addresses staged\", \"1 credit card numeric sequences staged\"], \"payload_size_bytes\": 98, \"sample_preview\": \"customer_emails: alice@example.com, bob@example.com, dev@nanditraders.in | CC: 4111-2222-3333-4444\"}",
+    "payload": {
+      "title": "Confidential PII Data Exfiltration Stream Detected",
+      "destination_port": "9000",
+      "indicators": [
+        "3 email addresses staged",
+        "1 credit card numeric sequences staged"
+      ],
+      "payload_size_bytes": 98,
+      "sample_preview": "customer_emails: alice@example.com, bob@example.com, dev@nanditraders.in | CC: 4111-2222-3333-4444"
+    }
+  },
+  {
+    "id": "0d184d19-e214-402c-bcca-a7437442c17f",
+    "ts": "2026-08-22T14:22:55.202670+00:00",
+    "incident_id": "INC-5486BE27",
+    "source_agent": "analyst",
+    "type": "analysis",
+    "mitre_stage": "TA0010 Exfiltration",
+    "confidence": 0.94,
+    "risk": "high",
+    "payload_json": "{\"incident_id\": \"INC-5486BE27\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The attacker originating from IP\\u202f192.168.43.103 achieved initial access by exploiting a SQL injection vulnerability, as indicated by the TA0001 intrusion detection. After compromising the database server, the adversary leveraged the foothold to locate and retrieve confidential personally identifiable information stored within the compromised system. This data was subsequently transmitted out of the environment, triggering the TA0010 exfiltration alert for PII data.\\n\\n\\ud83d\\udee1\\ufe0f [x402 Algorand Threat Intel]: IP Reputation lookup attempted (No module named 'algosdk')\", \"mitre_chain\": [\"TA0001 Initial Access\", \"TA0010 Exfiltration\"], \"correlated_events_count\": 2, \"severity\": \"CRITICAL\", \"x402_intel_enriched\": true}",
+    "payload": {
+      "incident_id": "INC-5486BE27",
+      "attacker_ip": "192.168.43.103",
+      "narrative": "The attacker originating from IP\u202f192.168.43.103 achieved initial access by exploiting a SQL injection vulnerability, as indicated by the TA0001 intrusion detection. After compromising the database server, the adversary leveraged the foothold to locate and retrieve confidential personally identifiable information stored within the compromised system. This data was subsequently transmitted out of the environment, triggering the TA0010 exfiltration alert for PII data.\n\n\ud83d\udee1\ufe0f [x402 Algorand Threat Intel]: IP Reputation lookup attempted (No module named 'algosdk')",
+      "mitre_chain": [
+        "TA0001 Initial Access",
+        "TA0010 Exfiltration"
+      ],
+      "correlated_events_count": 2,
+      "severity": "CRITICAL",
+      "x402_intel_enriched": true
+    }
+  },
+  {
+    "id": "b5ae6234-5ae5-459e-a875-881cab0dc594",
+    "ts": "2026-08-22T14:22:56.644398+00:00",
+    "incident_id": "INC-5486BE27",
+    "source_agent": "remediation",
+    "type": "remediation_proposal",
+    "mitre_stage": null,
+    "confidence": 0.88,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-5486BE27\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+    "payload": {
+      "incident_id": "INC-5486BE27",
+      "options": [
+        {
+          "action": "isolate_ip",
+          "target": "192.168.43.103",
+          "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+          "confidence": 0.88,
+          "risk": "low"
+        },
+        {
+          "action": "terminate_active_sessions",
+          "target": "all_unauthenticated",
+          "description": "Revoke active web sessions and invalidate token pools",
+          "confidence": 0.72,
+          "risk": "medium"
+        },
+        {
+          "action": "quarantine_target_service",
+          "target": "port_5000",
+          "description": "Quarantine company web server port to isolated VLAN",
+          "confidence": 0.45,
+          "risk": "high"
+        }
+      ],
+      "recommended_action": "isolate_ip"
+    }
+  },
+  {
+    "id": "f9a6827b-bab6-48b0-ba54-b98ca3af4012",
+    "ts": "2026-08-22T14:22:59.209759+00:00",
+    "incident_id": "INC-5486BE27",
+    "source_agent": "decision",
+    "type": "decision",
+    "mitre_stage": null,
+    "confidence": 0.55,
+    "risk": "medium",
+    "payload_json": "{\"incident_id\": \"INC-5486BE27\", \"outcome\": \"ESCALATE_TO_HUMAN\", \"score\": 0.55, \"reason\": \"Presenter manual escalation override triggered\", \"selected_action\": \"isolate_ip\", \"target\": \"192.168.43.103\"}",
+    "payload": {
+      "incident_id": "INC-5486BE27",
+      "outcome": "ESCALATE_TO_HUMAN",
+      "score": 0.55,
+      "reason": "Presenter manual escalation override triggered",
+      "selected_action": "isolate_ip",
+      "target": "192.168.43.103"
+    }
+  },
+  {
+    "id": "b5a35a30-152f-477d-8509-fac55eec800b",
+    "ts": "2026-08-22T14:23:02.095856+00:00",
+    "incident_id": "INC-5486BE27",
+    "source_agent": "comms",
+    "type": "report_generated",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-5486BE27\", \"target\": \"192.168.43.103\", \"chain\": [\"TA0001 Initial Access\", \"TA0010 Exfiltration\"], \"outcome\": \"ESCALATE_TO_HUMAN\", \"report_text\": \"- **Executive Summary:**  \\n  The attacker exploited a SQL\\u2011injection flaw to gain unauthorized access to our database server.  \\n  Sensitive personally identifiable information (PII) was then copied and transmitted outside the network.  \\n\\n- **Impact Assessment:** Confidential PII of customers has been exposed and potentially compromised.  \\n\\n- **Defense Action Taken:** The compromised server was isolated, a full forensic investigation initiated, and external incident\\u2011response experts engaged to contain the breach and begin notification procedures.\", \"created_at\": 1787408582.0958092}",
+    "payload": {
+      "incident_id": "INC-5486BE27",
+      "target": "192.168.43.103",
+      "chain": [
+        "TA0001 Initial Access",
+        "TA0010 Exfiltration"
+      ],
+      "outcome": "ESCALATE_TO_HUMAN",
+      "report_text": "- **Executive Summary:**  \n  The attacker exploited a SQL\u2011injection flaw to gain unauthorized access to our database server.  \n  Sensitive personally identifiable information (PII) was then copied and transmitted outside the network.  \n\n- **Impact Assessment:** Confidential PII of customers has been exposed and potentially compromised.  \n\n- **Defense Action Taken:** The compromised server was isolated, a full forensic investigation initiated, and external incident\u2011response experts engaged to contain the breach and begin notification procedures.",
+      "created_at": 1787408582.0958092
+    }
+  },
+  {
+    "id": "bbb9fd09-7fa8-419c-aeb3-7b5474554893",
+    "ts": "2026-08-22T14:23:04.371361+00:00",
+    "incident_id": "INC-5486BE27",
+    "source_agent": "comms",
+    "type": "escalation_sent",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "medium",
+    "payload_json": "{\"channel\": \"WHATSAPP\", \"incident_id\": \"INC-5486BE27\", \"status\": \"WhatsApp human-readable escalation report dispatched to Handler\", \"recipient\": \"whatsapp:+919945654067\"}",
+    "payload": {
+      "channel": "WHATSAPP",
+      "incident_id": "INC-5486BE27",
+      "status": "WhatsApp human-readable escalation report dispatched to Handler",
+      "recipient": "whatsapp:+919945654067"
+    }
+  },
+  {
+    "id": "dbb379fd-7b1f-40db-8113-5d56f7a76a1f",
+    "ts": "2026-08-22T14:23:04.857861+00:00",
+    "incident_id": "INC-5486BE27",
+    "source_agent": "comms",
+    "type": "escalation_sent",
+    "mitre_stage": null,
+    "confidence": 0.9,
+    "risk": "medium",
+    "payload_json": "{\"channel\": \"WHATSAPP\", \"incident_id\": \"INC-5486BE27\", \"options\": [\"1. EXECUTE (Auto-execute containment)\", \"2. DONT EXECUTE (Hold & monitor without blocking)\", \"3. INVESTIGATE (Quarantine & forensic review)\", \"Custom instruction / question\"], \"status\": \"Human-readable decision brief dispatched. Auto-call trigger armed (20s)...\"}",
+    "payload": {
+      "channel": "WHATSAPP",
+      "incident_id": "INC-5486BE27",
+      "options": [
+        "1. EXECUTE (Auto-execute containment)",
+        "2. DONT EXECUTE (Hold & monitor without blocking)",
+        "3. INVESTIGATE (Quarantine & forensic review)",
+        "Custom instruction / question"
+      ],
+      "status": "Human-readable decision brief dispatched. Auto-call trigger armed (20s)..."
+    }
+  },
+  {
+    "id": "fe223c80-7556-4e65-ab98-48274b7918f9",
+    "ts": "2026-08-22T14:23:26.261356+00:00",
+    "incident_id": "INC-5486BE27",
+    "source_agent": "comms",
+    "type": "escalation_sent",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "high",
+    "payload_json": "{\"incident_id\": \"INC-5486BE27\", \"channel\": \"VOICE_CALL\", \"attempt\": 1, \"status\": \"No WhatsApp reply in 20s. Voice Call #1 placed to (+919945654067)\", \"call_sid\": \"CA5857176df0502383a0ec828e2f561174\", \"caller\": \"+16893885821\", \"recipient\": \"+919945654067\"}",
+    "payload": {
+      "incident_id": "INC-5486BE27",
+      "channel": "VOICE_CALL",
+      "attempt": 1,
+      "status": "No WhatsApp reply in 20s. Voice Call #1 placed to (+919945654067)",
+      "call_sid": "CA5857176df0502383a0ec828e2f561174",
+      "caller": "+16893885821",
+      "recipient": "+919945654067"
+    }
+  },
+  {
+    "id": "e35ff231-02d6-477c-a288-029f423de69f",
+    "ts": "2026-08-22T14:23:48.185429+00:00",
+    "incident_id": "INC-5486BE27",
+    "source_agent": "comms",
+    "type": "escalation_sent",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "high",
+    "payload_json": "{\"incident_id\": \"INC-5486BE27\", \"channel\": \"VOICE_CALL\", \"attempt\": 2, \"status\": \"No response to Call #1. Voice Call #2 placed to (+919945654067)\", \"call_sid\": \"CAa4cf5dccb86e9c354016ec264a38a5a1\", \"caller\": \"+16893885821\", \"recipient\": \"+919945654067\"}",
+    "payload": {
+      "incident_id": "INC-5486BE27",
+      "channel": "VOICE_CALL",
+      "attempt": 2,
+      "status": "No response to Call #1. Voice Call #2 placed to (+919945654067)",
+      "call_sid": "CAa4cf5dccb86e9c354016ec264a38a5a1",
+      "caller": "+16893885821",
+      "recipient": "+919945654067"
+    }
+  },
+  {
+    "id": "6e8304f8-e100-4b8d-83fc-20507dd1648a",
+    "ts": "2026-08-22T14:24:08.917204+00:00",
+    "incident_id": "INC-5486BE27",
+    "source_agent": "remediation",
+    "type": "action_executed",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-5486BE27\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103\", \"timestamp\": 1787408648.9171593}",
+    "payload": {
+      "incident_id": "INC-5486BE27",
+      "action": "isolate_ip",
+      "target": "192.168.43.103",
+      "status": "COMPLETED",
+      "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103",
+      "timestamp": 1787408648.9171593
+    }
+  }
+]

@@ -1,0 +1,158 @@
+{
+  "incident_id": "INC-00229E3B",
+  "recorded_at": "2026-08-18 08:27:22 UTC",
+  "attack_type": "exfil",
+  "attacker_ip": "192.168.43.103",
+  "status": "RESOLVED",
+  "decision_outcome": "AUTO_EXECUTE",
+  "mitre_chain": [
+    "TA0010 Exfiltration"
+  ],
+  "executive_summary": "- **Executive Summary:**  \n  On\u202f[date], a data\u2011exfiltration event was detected originating from internal IP\u202f192.168.43.103, where confidential personally identifiable information (PII) was transmitted outside the network. The automated response was triggered and the incident was classified as resolved under the \u201cAUTO_EXECUTE\u201d protocol.  \n\n- **Impact Assessment:**  \n  Unauthorized exposure of sensitive PII may affect affected individuals and could have regulatory and reputational implications.  \n\n- **Defense Action Taken:**  \n  Automated controls blocked the outbound transfer, isolated the source host, and initiated forensic logging for further review.",
+  "technical_narrative": "The attacker operating from IP\u202f192.168.43.103 initiated a data\u2011exfiltration activity. Using this source, they transmitted confidential personally identifiable information (PII) out of the environment. The activity was captured by the TA0010 Exfiltration detector, which flagged the PII data exfiltration stream.",
+  "custom_notes": "",
+  "total_events_captured": 6,
+  "folder_path": "D:\\karthik\\software\\SentinelSwarm-LaptopB\\incident_records\\INC-00229E3B",
+  "events": [
+    {
+      "id": "18e7db98-2f7a-409c-921e-e9518c7fe7c5",
+      "ts": "2026-08-18T08:27:12.542265+00:00",
+      "incident_id": "INC-00229E3B",
+      "source_agent": "detector.exfil",
+      "type": "detection",
+      "mitre_stage": "TA0010 Exfiltration",
+      "confidence": 0.99,
+      "risk": "high",
+      "payload_json": "{\"title\": \"Confidential PII Data Exfiltration Stream Detected\", \"destination_port\": \"9000\", \"indicators\": [\"3 email addresses staged\", \"3 credit card numeric sequences staged\", \"3 SSN/ID identifiers found\"], \"payload_size_bytes\": 197, \"sample_preview\": \"EXFIL_STREAM: customer_records.csv\\njohn.doe@example.com,4111-2221-3334-9999,987-65-4321\\nsarah.c@company.org,5500-0001-2233-4455,123-45-6789\\nrajesh.k@n\"}",
+      "payload": {
+        "title": "Confidential PII Data Exfiltration Stream Detected",
+        "destination_port": "9000",
+        "indicators": [
+          "3 email addresses staged",
+          "3 credit card numeric sequences staged",
+          "3 SSN/ID identifiers found"
+        ],
+        "payload_size_bytes": 197,
+        "sample_preview": "EXFIL_STREAM: customer_records.csv\njohn.doe@example.com,4111-2221-3334-9999,987-65-4321\nsarah.c@company.org,5500-0001-2233-4455,123-45-6789\nrajesh.k@n"
+      }
+    },
+    {
+      "id": "8b39ae75-0776-4fcc-99f2-a13a68ce8125",
+      "ts": "2026-08-18T08:27:14.949737+00:00",
+      "incident_id": "INC-00229E3B",
+      "source_agent": "analyst",
+      "type": "analysis",
+      "mitre_stage": "TA0010 Exfiltration",
+      "confidence": 0.94,
+      "risk": "high",
+      "payload_json": "{\"incident_id\": \"INC-00229E3B\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The attacker operating from IP\\u202f192.168.43.103 initiated a data\\u2011exfiltration activity. Using this source, they transmitted confidential personally identifiable information (PII) out of the environment. The activity was captured by the TA0010 Exfiltration detector, which flagged the PII data exfiltration stream.\", \"mitre_chain\": [\"TA0010 Exfiltration\"], \"correlated_events_count\": 1, \"severity\": \"HIGH\"}",
+      "payload": {
+        "incident_id": "INC-00229E3B",
+        "attacker_ip": "192.168.43.103",
+        "narrative": "The attacker operating from IP\u202f192.168.43.103 initiated a data\u2011exfiltration activity. Using this source, they transmitted confidential personally identifiable information (PII) out of the environment. The activity was captured by the TA0010 Exfiltration detector, which flagged the PII data exfiltration stream.",
+        "mitre_chain": [
+          "TA0010 Exfiltration"
+        ],
+        "correlated_events_count": 1,
+        "severity": "HIGH"
+      }
+    },
+    {
+      "id": "215fd5cc-c664-44e4-9d8c-5dda923558c2",
+      "ts": "2026-08-18T08:27:16.402133+00:00",
+      "incident_id": "INC-00229E3B",
+      "source_agent": "remediation",
+      "type": "remediation_proposal",
+      "mitre_stage": null,
+      "confidence": 0.88,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-00229E3B\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+      "payload": {
+        "incident_id": "INC-00229E3B",
+        "options": [
+          {
+            "action": "isolate_ip",
+            "target": "192.168.43.103",
+            "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+            "confidence": 0.88,
+            "risk": "low"
+          },
+          {
+            "action": "terminate_active_sessions",
+            "target": "all_unauthenticated",
+            "description": "Revoke active web sessions and invalidate token pools",
+            "confidence": 0.72,
+            "risk": "medium"
+          },
+          {
+            "action": "quarantine_target_service",
+            "target": "port_5000",
+            "description": "Quarantine company web server port to isolated VLAN",
+            "confidence": 0.45,
+            "risk": "high"
+          }
+        ],
+        "recommended_action": "isolate_ip"
+      }
+    },
+    {
+      "id": "9e98ef2d-bbf5-44a1-985a-f74839aec090",
+      "ts": "2026-08-18T08:27:18.994538+00:00",
+      "incident_id": "INC-00229E3B",
+      "source_agent": "decision",
+      "type": "decision",
+      "mitre_stage": null,
+      "confidence": 0.9,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-00229E3B\", \"outcome\": \"AUTO_EXECUTE\", \"score\": 0.9, \"reason\": \"Confidence score (0.90) met auto-execution threshold (0.75)\", \"selected_action\": \"isolate_ip\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-00229E3B",
+        "outcome": "AUTO_EXECUTE",
+        "score": 0.9,
+        "reason": "Confidence score (0.90) met auto-execution threshold (0.75)",
+        "selected_action": "isolate_ip",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "a4b92abe-e5ba-458c-a5b9-8719910aaca7",
+      "ts": "2026-08-18T08:27:20.545493+00:00",
+      "incident_id": "INC-00229E3B",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-00229E3B\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103\", \"timestamp\": 1787041640.5453625}",
+      "payload": {
+        "incident_id": "INC-00229E3B",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "COMPLETED",
+        "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103",
+        "timestamp": 1787041640.5453625
+      }
+    },
+    {
+      "id": "be571ac5-40cb-4776-9650-6b91fd78aee8",
+      "ts": "2026-08-18T08:27:22.857303+00:00",
+      "incident_id": "INC-00229E3B",
+      "source_agent": "comms",
+      "type": "report_generated",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-00229E3B\", \"target\": \"192.168.43.103\", \"chain\": [\"TA0010 Exfiltration\"], \"outcome\": \"AUTO_EXECUTE\", \"report_text\": \"- **Executive Summary:**  \\n  On\\u202f[date], a data\\u2011exfiltration event was detected originating from internal IP\\u202f192.168.43.103, where confidential personally identifiable information (PII) was transmitted outside the network. The automated response was triggered and the incident was classified as resolved under the \\u201cAUTO_EXECUTE\\u201d protocol.  \\n\\n- **Impact Assessment:**  \\n  Unauthorized exposure of sensitive PII may affect affected individuals and could have regulatory and reputational implications.  \\n\\n- **Defense Action Taken:**  \\n  Automated controls blocked the outbound transfer, isolated the source host, and initiated forensic logging for further review.\", \"created_at\": 1787041642.8572571}",
+      "payload": {
+        "incident_id": "INC-00229E3B",
+        "target": "192.168.43.103",
+        "chain": [
+          "TA0010 Exfiltration"
+        ],
+        "outcome": "AUTO_EXECUTE",
+        "report_text": "- **Executive Summary:**  \n  On\u202f[date], a data\u2011exfiltration event was detected originating from internal IP\u202f192.168.43.103, where confidential personally identifiable information (PII) was transmitted outside the network. The automated response was triggered and the incident was classified as resolved under the \u201cAUTO_EXECUTE\u201d protocol.  \n\n- **Impact Assessment:**  \n  Unauthorized exposure of sensitive PII may affect affected individuals and could have regulatory and reputational implications.  \n\n- **Defense Action Taken:**  \n  Automated controls blocked the outbound transfer, isolated the source host, and initiated forensic logging for further review.",
+        "created_at": 1787041642.8572571
+      }
+    }
+  ]
+}

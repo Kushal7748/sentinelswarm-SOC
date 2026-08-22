@@ -1,0 +1,59 @@
+[
+  {
+    "id": "9dd14c81-9658-4a35-b1fc-7cf1937a685d",
+    "ts": "2026-08-21T07:17:02.258694+00:00",
+    "incident_id": "INC-TEST-999",
+    "source_agent": "remediation",
+    "type": "action_executed",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-TEST-999\", \"action\": \"isolate_ip\", \"target\": \"192.168.1.8\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.1.8\", \"timestamp\": 1787296622.2578232}",
+    "payload": {
+      "incident_id": "INC-TEST-999",
+      "action": "isolate_ip",
+      "target": "192.168.1.8",
+      "status": "COMPLETED",
+      "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.1.8",
+      "timestamp": 1787296622.2578232
+    }
+  },
+  {
+    "id": "9a17e87c-b297-4499-9aa9-0b435c58c8ba",
+    "ts": "2026-08-21T07:17:02.276839+00:00",
+    "incident_id": "INC-TEST-999",
+    "source_agent": "human_reviewer",
+    "type": "human_response",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-TEST-999\", \"decision\": \"EXECUTE_AUTOMATICALLY\", \"action\": \"isolate_ip\", \"target\": \"192.168.1.8\", \"channel\": \"WHATSAPP\", \"raw_text\": \"1\"}",
+    "payload": {
+      "incident_id": "INC-TEST-999",
+      "decision": "EXECUTE_AUTOMATICALLY",
+      "action": "isolate_ip",
+      "target": "192.168.1.8",
+      "channel": "WHATSAPP",
+      "raw_text": "1"
+    }
+  },
+  {
+    "id": "8d22f134-963c-4b1e-b90d-2a9576360f84",
+    "ts": "2026-08-21T07:17:09.941046+00:00",
+    "incident_id": "INC-TEST-999",
+    "source_agent": "human_reviewer",
+    "type": "human_response",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-TEST-999\", \"decision\": \"DONT_EXECUTE_AUTOMATICALLY\", \"target\": \"192.168.1.8\", \"channel\": \"WHATSAPP\", \"reason\": \"Human operator selected Option 2: Hold & maintain observation without blocking\", \"raw_text\": \"2\"}",
+    "payload": {
+      "incident_id": "INC-TEST-999",
+      "decision": "DONT_EXECUTE_AUTOMATICALLY",
+      "target": "192.168.1.8",
+      "channel": "WHATSAPP",
+      "reason": "Human operator selected Option 2: Hold & maintain observation without blocking",
+      "raw_text": "2"
+    }
+  }
+]

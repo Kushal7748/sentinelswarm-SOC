@@ -1,0 +1,210 @@
+{
+  "incident_id": "INC-D937C3F7",
+  "recorded_at": "2026-08-18 03:54:02 UTC",
+  "attack_type": "sqli",
+  "attacker_ip": "192.168.43.103",
+  "status": "RESOLVED",
+  "decision_outcome": "ESCALATE_TO_HUMAN",
+  "mitre_chain": [
+    "TA0001 Initial Access"
+  ],
+  "executive_summary": "- **Executive Summary:**  \n  The attacker exploited a SQL\u2011injection vulnerability from internal IP\u202f192.168.43.103, gaining initial access to our database/application layer.  \n  This foothold allows the adversary to move laterally or extract sensitive data.\n\n- **Impact Assessment:** Potential exposure of confidential data and risk of further system compromise.\n\n- **Defense Action Taken:** Immediate containment of the affected system, credential reset, and escalation to the incident response team for full investigation.",
+  "technical_narrative": "The attacker originating from IP\u202f192.168.43.103 leveraged a SQL injection vulnerability, as identified by the TA0001 Initial Access detection. This successful injection gave the adversary a foothold within the targeted database or application layer. With that initial foothold established, the attacker is now positioned to pursue further lateral movement or data extraction steps.",
+  "custom_notes": "",
+  "total_events_captured": 9,
+  "folder_path": "D:\\karthik\\software\\SentinelSwarm-LaptopB\\incident_records\\INC-D937C3F7",
+  "events": [
+    {
+      "id": "ece8ce8e-9553-4333-afab-befd0f5866dc",
+      "ts": "2026-08-18T03:52:52.571656+00:00",
+      "incident_id": "INC-D937C3F7",
+      "source_agent": "detector.intrusion",
+      "type": "detection",
+      "mitre_stage": "TA0001 Initial Access",
+      "confidence": 0.96,
+      "risk": "high",
+      "payload_json": "{\"title\": \"SQL Injection Signature Identified\", \"source_ip\": \"192.168.43.103\", \"matched_pattern\": \"'\\\\s*OR\\\\s*'1'\\\\s*=\\\\s*'1\", \"log_entry\": \"POST /login HTTP/1.1 200 - user='admin' OR '1'='1' -- pass=xxx\", \"target_endpoint\": \"/login\"}",
+      "payload": {
+        "title": "SQL Injection Signature Identified",
+        "source_ip": "192.168.43.103",
+        "matched_pattern": "'\\s*OR\\s*'1'\\s*=\\s*'1",
+        "log_entry": "POST /login HTTP/1.1 200 - user='admin' OR '1'='1' -- pass=xxx",
+        "target_endpoint": "/login"
+      }
+    },
+    {
+      "id": "f3b1ad94-0b47-43c0-9a06-d6bf25ea309a",
+      "ts": "2026-08-18T03:52:55.088809+00:00",
+      "incident_id": "INC-D937C3F7",
+      "source_agent": "analyst",
+      "type": "analysis",
+      "mitre_stage": "TA0001 Initial Access",
+      "confidence": 0.94,
+      "risk": "high",
+      "payload_json": "{\"incident_id\": \"INC-D937C3F7\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The attacker originating from IP\\u202f192.168.43.103 leveraged a SQL injection vulnerability, as identified by the TA0001 Initial Access detection. This successful injection gave the adversary a foothold within the targeted database or application layer. With that initial foothold established, the attacker is now positioned to pursue further lateral movement or data extraction steps.\", \"mitre_chain\": [\"TA0001 Initial Access\"], \"correlated_events_count\": 1, \"severity\": \"HIGH\"}",
+      "payload": {
+        "incident_id": "INC-D937C3F7",
+        "attacker_ip": "192.168.43.103",
+        "narrative": "The attacker originating from IP\u202f192.168.43.103 leveraged a SQL injection vulnerability, as identified by the TA0001 Initial Access detection. This successful injection gave the adversary a foothold within the targeted database or application layer. With that initial foothold established, the attacker is now positioned to pursue further lateral movement or data extraction steps.",
+        "mitre_chain": [
+          "TA0001 Initial Access"
+        ],
+        "correlated_events_count": 1,
+        "severity": "HIGH"
+      }
+    },
+    {
+      "id": "b8176538-1910-47a1-b0e2-78c128bd925c",
+      "ts": "2026-08-18T03:52:56.502723+00:00",
+      "incident_id": "INC-D937C3F7",
+      "source_agent": "remediation",
+      "type": "remediation_proposal",
+      "mitre_stage": null,
+      "confidence": 0.88,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-D937C3F7\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+      "payload": {
+        "incident_id": "INC-D937C3F7",
+        "options": [
+          {
+            "action": "isolate_ip",
+            "target": "192.168.43.103",
+            "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+            "confidence": 0.88,
+            "risk": "low"
+          },
+          {
+            "action": "terminate_active_sessions",
+            "target": "all_unauthenticated",
+            "description": "Revoke active web sessions and invalidate token pools",
+            "confidence": 0.72,
+            "risk": "medium"
+          },
+          {
+            "action": "quarantine_target_service",
+            "target": "port_5000",
+            "description": "Quarantine company web server port to isolated VLAN",
+            "confidence": 0.45,
+            "risk": "high"
+          }
+        ],
+        "recommended_action": "isolate_ip"
+      }
+    },
+    {
+      "id": "72eb1c59-cc49-49f1-b547-f9e17fc26924",
+      "ts": "2026-08-18T03:52:59.091671+00:00",
+      "incident_id": "INC-D937C3F7",
+      "source_agent": "decision",
+      "type": "decision",
+      "mitre_stage": null,
+      "confidence": 0.55,
+      "risk": "medium",
+      "payload_json": "{\"incident_id\": \"INC-D937C3F7\", \"outcome\": \"ESCALATE_TO_HUMAN\", \"score\": 0.55, \"reason\": \"Presenter manual escalation override triggered\", \"selected_action\": \"isolate_ip\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-D937C3F7",
+        "outcome": "ESCALATE_TO_HUMAN",
+        "score": 0.55,
+        "reason": "Presenter manual escalation override triggered",
+        "selected_action": "isolate_ip",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "621a9db4-3d02-45b8-a748-74fb34568256",
+      "ts": "2026-08-18T03:53:01.589011+00:00",
+      "incident_id": "INC-D937C3F7",
+      "source_agent": "comms",
+      "type": "report_generated",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-D937C3F7\", \"target\": \"192.168.43.103\", \"chain\": [\"TA0001 Initial Access\"], \"outcome\": \"ESCALATE_TO_HUMAN\", \"report_text\": \"- **Executive Summary:**  \\n  The attacker exploited a SQL\\u2011injection vulnerability from internal IP\\u202f192.168.43.103, gaining initial access to our database/application layer.  \\n  This foothold allows the adversary to move laterally or extract sensitive data.\\n\\n- **Impact Assessment:** Potential exposure of confidential data and risk of further system compromise.\\n\\n- **Defense Action Taken:** Immediate containment of the affected system, credential reset, and escalation to the incident response team for full investigation.\", \"created_at\": 1787025181.588992}",
+      "payload": {
+        "incident_id": "INC-D937C3F7",
+        "target": "192.168.43.103",
+        "chain": [
+          "TA0001 Initial Access"
+        ],
+        "outcome": "ESCALATE_TO_HUMAN",
+        "report_text": "- **Executive Summary:**  \n  The attacker exploited a SQL\u2011injection vulnerability from internal IP\u202f192.168.43.103, gaining initial access to our database/application layer.  \n  This foothold allows the adversary to move laterally or extract sensitive data.\n\n- **Impact Assessment:** Potential exposure of confidential data and risk of further system compromise.\n\n- **Defense Action Taken:** Immediate containment of the affected system, credential reset, and escalation to the incident response team for full investigation.",
+        "created_at": 1787025181.588992
+      }
+    },
+    {
+      "id": "f9c89ad2-ea64-4976-ac33-6125e566eec8",
+      "ts": "2026-08-18T03:53:02.886224+00:00",
+      "incident_id": "INC-D937C3F7",
+      "source_agent": "comms",
+      "type": "escalation_sent",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "medium",
+      "payload_json": "{\"channel\": \"WHATSAPP\", \"incident_id\": \"INC-D937C3F7\", \"status\": \"WhatsApp human-readable escalation report dispatched to Handler\", \"recipient\": \"whatsapp:+919945654067\"}",
+      "payload": {
+        "channel": "WHATSAPP",
+        "incident_id": "INC-D937C3F7",
+        "status": "WhatsApp human-readable escalation report dispatched to Handler",
+        "recipient": "whatsapp:+919945654067"
+      }
+    },
+    {
+      "id": "ec41eea6-33d6-41a2-a911-7420832ffc87",
+      "ts": "2026-08-18T03:53:02.891013+00:00",
+      "incident_id": "INC-D937C3F7",
+      "source_agent": "comms",
+      "type": "escalation_sent",
+      "mitre_stage": null,
+      "confidence": 0.9,
+      "risk": "medium",
+      "payload_json": "{\"channel\": \"WHATSAPP\", \"incident_id\": \"INC-D937C3F7\", \"options\": [\"1. EXECUTE (Auto-execute containment)\", \"2. DONT EXECUTE (Hold & monitor without blocking)\", \"3. INVESTIGATE (Quarantine & forensic review)\", \"Custom instruction / question\"], \"status\": \"Human-readable decision brief dispatched to Handler. Awaiting selection...\"}",
+      "payload": {
+        "channel": "WHATSAPP",
+        "incident_id": "INC-D937C3F7",
+        "options": [
+          "1. EXECUTE (Auto-execute containment)",
+          "2. DONT EXECUTE (Hold & monitor without blocking)",
+          "3. INVESTIGATE (Quarantine & forensic review)",
+          "Custom instruction / question"
+        ],
+        "status": "Human-readable decision brief dispatched to Handler. Awaiting selection..."
+      }
+    },
+    {
+      "id": "cda06688-76dd-483b-83d9-104db2902e70",
+      "ts": "2026-08-18T03:53:46.173100+00:00",
+      "incident_id": "INC-D937C3F7",
+      "source_agent": "human_reviewer",
+      "type": "human_response",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-D937C3F7\", \"decision\": \"EXECUTE\", \"channel\": \"DASHBOARD_UI\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-D937C3F7",
+        "decision": "EXECUTE",
+        "channel": "DASHBOARD_UI",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "32621291-dacb-4679-8928-bd4177caee53",
+      "ts": "2026-08-18T03:53:47.732393+00:00",
+      "incident_id": "INC-D937C3F7",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-D937C3F7\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103\", \"timestamp\": 1787025227.7323647}",
+      "payload": {
+        "incident_id": "INC-D937C3F7",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "COMPLETED",
+        "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103",
+        "timestamp": 1787025227.7323647
+      }
+    }
+  ]
+}

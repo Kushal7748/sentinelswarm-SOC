@@ -1,0 +1,108 @@
+{
+  "incident_id": "INC-TEST1234",
+  "recorded_at": "2026-08-19 07:48:32 UTC",
+  "attack_type": "SQL Injection & Data Exfiltration",
+  "attacker_ip": "192.168.43.103",
+  "status": "RESOLVED",
+  "decision_outcome": "HUMAN_WHATSAPP_EXECUTE",
+  "mitre_chain": [
+    "TA0001 Initial Access",
+    "TA0010 Exfiltration"
+  ],
+  "executive_summary": "Adversary initiated SQL Injection & Data Exfiltration targeting perimeter endpoints. Automated sensor swarm detected intrusion patterns across MITRE chain: TA0001 Initial Access -> TA0010 Exfiltration.",
+  "technical_narrative": "Attacker attempting SQL injection",
+  "custom_notes": "Human operator approved Option 1 (Execute Automatically) via WhatsApp: '1. Execute (Isolate IP)'",
+  "total_events_captured": 5,
+  "folder_path": "D:\\karthik\\software\\SentinelSwarm-LaptopB\\incident_records\\INC-TEST1234",
+  "events": [
+    {
+      "id": "20d8ffe9-cfd1-409b-832a-3d9f6b9a6589",
+      "ts": "2026-08-19T07:48:18.221448+00:00",
+      "incident_id": "INC-TEST1234",
+      "source_agent": "remediation",
+      "type": "email_quarantined",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-TEST1234\", \"status\": \"DELETED\", \"message\": \"Phishing lure email purged & quarantined from Nandi Traders inbox\"}",
+      "payload": {
+        "incident_id": "INC-TEST1234",
+        "status": "DELETED",
+        "message": "Phishing lure email purged & quarantined from Nandi Traders inbox"
+      }
+    },
+    {
+      "id": "5e1ff33b-74fd-465d-ad3b-cfff921a214d",
+      "ts": "2026-08-19T07:48:18.228253+00:00",
+      "incident_id": "INC-TEST1234",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-TEST1234\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"FAILED\", \"details\": \"Rule applied: DROP traffic from 192.168.43.103 | \\u2709\\ufe0f Phishing lure email automatically purged from Nandi Traders inbox (MailHog)\", \"timestamp\": 1787125698.2282188}",
+      "payload": {
+        "incident_id": "INC-TEST1234",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "FAILED",
+        "details": "Rule applied: DROP traffic from 192.168.43.103 | \u2709\ufe0f Phishing lure email automatically purged from Nandi Traders inbox (MailHog)",
+        "timestamp": 1787125698.2282188
+      }
+    },
+    {
+      "id": "f1e8c146-74ea-4830-833f-72302449fb09",
+      "ts": "2026-08-19T07:48:18.238056+00:00",
+      "incident_id": "INC-TEST1234",
+      "source_agent": "human_reviewer",
+      "type": "human_response",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-TEST1234\", \"decision\": \"EXECUTE_AUTOMATICALLY\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"channel\": \"WHATSAPP\", \"raw_text\": \"1. Execute (Isolate IP)\"}",
+      "payload": {
+        "incident_id": "INC-TEST1234",
+        "decision": "EXECUTE_AUTOMATICALLY",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "channel": "WHATSAPP",
+        "raw_text": "1. Execute (Isolate IP)"
+      }
+    },
+    {
+      "id": "461f9078-94a7-41f4-8cef-386048e193e3",
+      "ts": "2026-08-19T07:48:32.255461+00:00",
+      "incident_id": "INC-TEST1234",
+      "source_agent": "remediation",
+      "type": "email_quarantined",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-TEST1234\", \"status\": \"DELETED\", \"message\": \"Phishing lure email purged & quarantined from Nandi Traders inbox\"}",
+      "payload": {
+        "incident_id": "INC-TEST1234",
+        "status": "DELETED",
+        "message": "Phishing lure email purged & quarantined from Nandi Traders inbox"
+      }
+    },
+    {
+      "id": "97c0877c-0001-4014-b853-d8b9858a7ac5",
+      "ts": "2026-08-19T07:48:32.264002+00:00",
+      "incident_id": "INC-TEST1234",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-TEST1234\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"FAILED\", \"details\": \"Rule applied: DROP traffic from 192.168.43.103 | \\u2709\\ufe0f Phishing lure email automatically purged from Nandi Traders inbox (MailHog)\", \"timestamp\": 1787125712.2639604}",
+      "payload": {
+        "incident_id": "INC-TEST1234",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "FAILED",
+        "details": "Rule applied: DROP traffic from 192.168.43.103 | \u2709\ufe0f Phishing lure email automatically purged from Nandi Traders inbox (MailHog)",
+        "timestamp": 1787125712.2639604
+      }
+    }
+  ]
+}

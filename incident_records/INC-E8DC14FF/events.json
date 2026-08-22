@@ -1,0 +1,105 @@
+[
+  {
+    "id": "b81f8a52-7f9c-4504-a90e-5c1da27585d4",
+    "ts": "2026-08-19T05:56:27.565482+00:00",
+    "incident_id": "INC-E8DC14FF",
+    "source_agent": "detector.phishing",
+    "type": "detection",
+    "mitre_stage": "TA0001 Initial Access",
+    "confidence": 0.98,
+    "risk": "high",
+    "payload_json": "{\"title\": \"Phishing Lure Email Detected\", \"sender\": \"accounts-spoof@external-relay.net\", \"display_name\": \"ceo - nandi traders\", \"subject\": \"URGENT: Executive Wire Transfer Authorization Required\", \"reasons\": [\"Contains urgency/hook keywords: urgent, verify your account, wire transfer, click here\", \"Spoofed authority display name 'ceo - nandi traders' from external address 'accounts-spoof@external-relay.net'\", \"Contained 1 external hyperlink(s) in payload\"], \"links\": [\"http://secure-nanditraders-auth.cc/verify\"], \"raw_snippet\": \"please verify your account and approve the pending wire transfer immediately. click here: http://secure-nanditraders-auth.cc/verify\"}",
+    "payload": {
+      "title": "Phishing Lure Email Detected",
+      "sender": "accounts-spoof@external-relay.net",
+      "display_name": "ceo - nandi traders",
+      "subject": "URGENT: Executive Wire Transfer Authorization Required",
+      "reasons": [
+        "Contains urgency/hook keywords: urgent, verify your account, wire transfer, click here",
+        "Spoofed authority display name 'ceo - nandi traders' from external address 'accounts-spoof@external-relay.net'",
+        "Contained 1 external hyperlink(s) in payload"
+      ],
+      "links": [
+        "http://secure-nanditraders-auth.cc/verify"
+      ],
+      "raw_snippet": "please verify your account and approve the pending wire transfer immediately. click here: http://secure-nanditraders-auth.cc/verify"
+    }
+  },
+  {
+    "id": "8a96835f-35ad-4e59-8511-28473ccb5779",
+    "ts": "2026-08-19T05:56:33.673946+00:00",
+    "incident_id": "INC-E8DC14FF",
+    "source_agent": "analyst",
+    "type": "analysis",
+    "mitre_stage": "TA0001 Initial Access",
+    "confidence": 0.94,
+    "risk": "high",
+    "payload_json": "{\"incident_id\": \"INC-E8DC14FF\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The attacker at IP\\u202f192.168.43.103 sent a phishing lure email that was captured by the [detector.phishing] rule. This email represents the TA0001 Initial Access technique, indicating the adversary\\u2019s attempt to gain entry into the target environment. No further activity has been observed beyond this initial phishing delivery.\", \"mitre_chain\": [\"TA0001 Initial Access\"], \"correlated_events_count\": 1, \"severity\": \"HIGH\"}",
+    "payload": {
+      "incident_id": "INC-E8DC14FF",
+      "attacker_ip": "192.168.43.103",
+      "narrative": "The attacker at IP\u202f192.168.43.103 sent a phishing lure email that was captured by the [detector.phishing] rule. This email represents the TA0001 Initial Access technique, indicating the adversary\u2019s attempt to gain entry into the target environment. No further activity has been observed beyond this initial phishing delivery.",
+      "mitre_chain": [
+        "TA0001 Initial Access"
+      ],
+      "correlated_events_count": 1,
+      "severity": "HIGH"
+    }
+  },
+  {
+    "id": "d42b80c9-2c56-4e0a-8355-1b76df978419",
+    "ts": "2026-08-19T05:56:35.115107+00:00",
+    "incident_id": "INC-E8DC14FF",
+    "source_agent": "remediation",
+    "type": "remediation_proposal",
+    "mitre_stage": null,
+    "confidence": 0.88,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-E8DC14FF\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+    "payload": {
+      "incident_id": "INC-E8DC14FF",
+      "options": [
+        {
+          "action": "isolate_ip",
+          "target": "192.168.43.103",
+          "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+          "confidence": 0.88,
+          "risk": "low"
+        },
+        {
+          "action": "terminate_active_sessions",
+          "target": "all_unauthenticated",
+          "description": "Revoke active web sessions and invalidate token pools",
+          "confidence": 0.72,
+          "risk": "medium"
+        },
+        {
+          "action": "quarantine_target_service",
+          "target": "port_5000",
+          "description": "Quarantine company web server port to isolated VLAN",
+          "confidence": 0.45,
+          "risk": "high"
+        }
+      ],
+      "recommended_action": "isolate_ip"
+    }
+  },
+  {
+    "id": "35e5a3ca-99d2-419f-a33d-30334685c7dd",
+    "ts": "2026-08-19T05:56:37.369267+00:00",
+    "incident_id": "INC-E8DC14FF",
+    "source_agent": "decision",
+    "type": "breach_uncontained",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "critical",
+    "payload_json": "{\"incident_id\": \"INC-E8DC14FF\", \"target\": \"192.168.43.103\", \"status\": \"BREACH_UNCONTAINED\", \"warning\": \"\\u26a0\\ufe0f SENTINELSWARM DEFENSE IS DEACTIVATED: Attack breached Nandi Traders without automated firewall containment!\", \"outcome\": \"DEFENSE_DEACTIVATED\"}",
+    "payload": {
+      "incident_id": "INC-E8DC14FF",
+      "target": "192.168.43.103",
+      "status": "BREACH_UNCONTAINED",
+      "warning": "\u26a0\ufe0f SENTINELSWARM DEFENSE IS DEACTIVATED: Attack breached Nandi Traders without automated firewall containment!",
+      "outcome": "DEFENSE_DEACTIVATED"
+    }
+  }
+]

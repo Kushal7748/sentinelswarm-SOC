@@ -1,0 +1,178 @@
+{
+  "incident_id": "INC-90F40BE9",
+  "recorded_at": "2026-08-18 04:32:46 UTC",
+  "attack_type": "full_chain",
+  "attacker_ip": "192.168.43.103",
+  "status": "RESOLVED",
+  "decision_outcome": "AUTO_EXECUTE",
+  "mitre_chain": [
+    "TA0001 Initial Access",
+    "TA0010 Exfiltration"
+  ],
+  "executive_summary": "- **Executive Summary:** A malicious actor from IP\u202f192.168.43.103 exploited a SQL\u2011injection flaw to gain initial access and subsequently exfiltrated confidential personally\u2011identifiable information. The breach was detected during the data\u2011exfiltration phase and automatically contained.  \n\n- **Impact Assessment:** Sensitive PII was exposed and removed from our network, posing a moderate compliance and reputational risk.  \n\n- **Defense Action Taken:** Automated response blocked the malicious traffic, terminated the exfiltration session, and isolated the compromised host for forensic analysis.",
+  "technical_narrative": "The attacker originating from IP\u202f192.168.43.103 used a SQL\u2011injection flaw to obtain initial access to the target system (TA0001). Once inside, the adversary accessed confidential personally\u2011identifiable information stored on the compromised host. A data\u2011exfiltration stream carrying that PII was subsequently observed, triggering the TA0010 exfiltration detection.",
+  "custom_notes": "",
+  "total_events_captured": 7,
+  "folder_path": "D:\\karthik\\software\\SentinelSwarm-LaptopB\\incident_records\\INC-90F40BE9",
+  "events": [
+    {
+      "id": "38bf9647-a5bf-4d6b-b2cc-25fb2f4ae1c7",
+      "ts": "2026-08-18T04:32:36.248603+00:00",
+      "incident_id": "INC-90F40BE9",
+      "source_agent": "detector.intrusion",
+      "type": "detection",
+      "mitre_stage": "TA0001 Initial Access",
+      "confidence": 0.96,
+      "risk": "high",
+      "payload_json": "{\"title\": \"SQL Injection Signature Identified\", \"source_ip\": \"192.168.43.103\", \"matched_pattern\": \"UNION\\\\s+SELECT\", \"log_entry\": \"POST /login HTTP/1.1 200 - user=' UNION SELECT * FROM users --\", \"target_endpoint\": \"/login\"}",
+      "payload": {
+        "title": "SQL Injection Signature Identified",
+        "source_ip": "192.168.43.103",
+        "matched_pattern": "UNION\\s+SELECT",
+        "log_entry": "POST /login HTTP/1.1 200 - user=' UNION SELECT * FROM users --",
+        "target_endpoint": "/login"
+      }
+    },
+    {
+      "id": "e27cda94-2cb9-40cd-a252-e2a2742b28c0",
+      "ts": "2026-08-18T04:32:36.281666+00:00",
+      "incident_id": "INC-90F40BE9",
+      "source_agent": "detector.exfil",
+      "type": "detection",
+      "mitre_stage": "TA0010 Exfiltration",
+      "confidence": 0.95,
+      "risk": "high",
+      "payload_json": "{\"title\": \"Confidential PII Data Exfiltration Stream Detected\", \"destination_port\": \"9000\", \"indicators\": [\"3 email addresses staged\", \"1 credit card numeric sequences staged\"], \"payload_size_bytes\": 98, \"sample_preview\": \"customer_emails: alice@example.com, bob@example.com, dev@nanditraders.in | CC: 4111-2222-3333-4444\"}",
+      "payload": {
+        "title": "Confidential PII Data Exfiltration Stream Detected",
+        "destination_port": "9000",
+        "indicators": [
+          "3 email addresses staged",
+          "1 credit card numeric sequences staged"
+        ],
+        "payload_size_bytes": 98,
+        "sample_preview": "customer_emails: alice@example.com, bob@example.com, dev@nanditraders.in | CC: 4111-2222-3333-4444"
+      }
+    },
+    {
+      "id": "ae7f70b4-7512-40b1-9217-9c84ef9704c8",
+      "ts": "2026-08-18T04:32:38.568687+00:00",
+      "incident_id": "INC-90F40BE9",
+      "source_agent": "analyst",
+      "type": "analysis",
+      "mitre_stage": "TA0010 Exfiltration",
+      "confidence": 0.94,
+      "risk": "high",
+      "payload_json": "{\"incident_id\": \"INC-90F40BE9\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The attacker originating from IP\\u202f192.168.43.103 used a SQL\\u2011injection flaw to obtain initial access to the target system (TA0001). Once inside, the adversary accessed confidential personally\\u2011identifiable information stored on the compromised host. A data\\u2011exfiltration stream carrying that PII was subsequently observed, triggering the TA0010 exfiltration detection.\", \"mitre_chain\": [\"TA0001 Initial Access\", \"TA0010 Exfiltration\"], \"correlated_events_count\": 2, \"severity\": \"CRITICAL\"}",
+      "payload": {
+        "incident_id": "INC-90F40BE9",
+        "attacker_ip": "192.168.43.103",
+        "narrative": "The attacker originating from IP\u202f192.168.43.103 used a SQL\u2011injection flaw to obtain initial access to the target system (TA0001). Once inside, the adversary accessed confidential personally\u2011identifiable information stored on the compromised host. A data\u2011exfiltration stream carrying that PII was subsequently observed, triggering the TA0010 exfiltration detection.",
+        "mitre_chain": [
+          "TA0001 Initial Access",
+          "TA0010 Exfiltration"
+        ],
+        "correlated_events_count": 2,
+        "severity": "CRITICAL"
+      }
+    },
+    {
+      "id": "c97e087d-efee-41dd-b8b1-c4ed602706c5",
+      "ts": "2026-08-18T04:32:39.994592+00:00",
+      "incident_id": "INC-90F40BE9",
+      "source_agent": "remediation",
+      "type": "remediation_proposal",
+      "mitre_stage": null,
+      "confidence": 0.88,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-90F40BE9\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+      "payload": {
+        "incident_id": "INC-90F40BE9",
+        "options": [
+          {
+            "action": "isolate_ip",
+            "target": "192.168.43.103",
+            "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+            "confidence": 0.88,
+            "risk": "low"
+          },
+          {
+            "action": "terminate_active_sessions",
+            "target": "all_unauthenticated",
+            "description": "Revoke active web sessions and invalidate token pools",
+            "confidence": 0.72,
+            "risk": "medium"
+          },
+          {
+            "action": "quarantine_target_service",
+            "target": "port_5000",
+            "description": "Quarantine company web server port to isolated VLAN",
+            "confidence": 0.45,
+            "risk": "high"
+          }
+        ],
+        "recommended_action": "isolate_ip"
+      }
+    },
+    {
+      "id": "269d5c06-51cb-4604-a261-93fb3d3d8344",
+      "ts": "2026-08-18T04:32:42.566810+00:00",
+      "incident_id": "INC-90F40BE9",
+      "source_agent": "decision",
+      "type": "decision",
+      "mitre_stage": null,
+      "confidence": 0.9,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-90F40BE9\", \"outcome\": \"AUTO_EXECUTE\", \"score\": 0.9, \"reason\": \"Confidence score (0.90) met auto-execution threshold (0.75)\", \"selected_action\": \"isolate_ip\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-90F40BE9",
+        "outcome": "AUTO_EXECUTE",
+        "score": 0.9,
+        "reason": "Confidence score (0.90) met auto-execution threshold (0.75)",
+        "selected_action": "isolate_ip",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "17a13a0c-70c7-4d10-a597-e275a2702b3f",
+      "ts": "2026-08-18T04:32:44.100750+00:00",
+      "incident_id": "INC-90F40BE9",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-90F40BE9\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103\", \"timestamp\": 1787027564.1006813}",
+      "payload": {
+        "incident_id": "INC-90F40BE9",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "COMPLETED",
+        "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103",
+        "timestamp": 1787027564.1006813
+      }
+    },
+    {
+      "id": "ffb8be17-5fac-4283-8b0e-97b3c2882f9e",
+      "ts": "2026-08-18T04:32:46.062503+00:00",
+      "incident_id": "INC-90F40BE9",
+      "source_agent": "comms",
+      "type": "report_generated",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-90F40BE9\", \"target\": \"192.168.43.103\", \"chain\": [\"TA0001 Initial Access\", \"TA0010 Exfiltration\"], \"outcome\": \"AUTO_EXECUTE\", \"report_text\": \"- **Executive Summary:** A malicious actor from IP\\u202f192.168.43.103 exploited a SQL\\u2011injection flaw to gain initial access and subsequently exfiltrated confidential personally\\u2011identifiable information. The breach was detected during the data\\u2011exfiltration phase and automatically contained.  \\n\\n- **Impact Assessment:** Sensitive PII was exposed and removed from our network, posing a moderate compliance and reputational risk.  \\n\\n- **Defense Action Taken:** Automated response blocked the malicious traffic, terminated the exfiltration session, and isolated the compromised host for forensic analysis.\", \"created_at\": 1787027566.0624626}",
+      "payload": {
+        "incident_id": "INC-90F40BE9",
+        "target": "192.168.43.103",
+        "chain": [
+          "TA0001 Initial Access",
+          "TA0010 Exfiltration"
+        ],
+        "outcome": "AUTO_EXECUTE",
+        "report_text": "- **Executive Summary:** A malicious actor from IP\u202f192.168.43.103 exploited a SQL\u2011injection flaw to gain initial access and subsequently exfiltrated confidential personally\u2011identifiable information. The breach was detected during the data\u2011exfiltration phase and automatically contained.  \n\n- **Impact Assessment:** Sensitive PII was exposed and removed from our network, posing a moderate compliance and reputational risk.  \n\n- **Defense Action Taken:** Automated response blocked the malicious traffic, terminated the exfiltration session, and isolated the compromised host for forensic analysis.",
+        "created_at": 1787027566.0624626
+      }
+    }
+  ]
+}

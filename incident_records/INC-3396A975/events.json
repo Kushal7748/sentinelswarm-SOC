@@ -1,0 +1,158 @@
+[
+  {
+    "id": "13c928fc-fd0d-4c18-b8f9-7bdc56da87b9",
+    "ts": "2026-08-19T13:22:52.018334+00:00",
+    "incident_id": "INC-3396A975",
+    "source_agent": "detector.exfil",
+    "type": "detection",
+    "mitre_stage": "TA0010 Exfiltration",
+    "confidence": 0.99,
+    "risk": "high",
+    "payload_json": "{\"title\": \"Confidential PII Data Exfiltration Stream Detected\", \"destination_port\": \"9000\", \"indicators\": [\"3 email addresses staged\", \"3 credit card numeric sequences staged\", \"3 SSN/ID identifiers found\"], \"payload_size_bytes\": 197, \"sample_preview\": \"EXFIL_STREAM: customer_records.csv\\njohn.doe@example.com,4111-2221-3334-9999,987-65-4321\\nsarah.c@company.org,5500-0001-2233-4455,123-45-6789\\nrajesh.k@n\"}",
+    "payload": {
+      "title": "Confidential PII Data Exfiltration Stream Detected",
+      "destination_port": "9000",
+      "indicators": [
+        "3 email addresses staged",
+        "3 credit card numeric sequences staged",
+        "3 SSN/ID identifiers found"
+      ],
+      "payload_size_bytes": 197,
+      "sample_preview": "EXFIL_STREAM: customer_records.csv\njohn.doe@example.com,4111-2221-3334-9999,987-65-4321\nsarah.c@company.org,5500-0001-2233-4455,123-45-6789\nrajesh.k@n"
+    }
+  },
+  {
+    "id": "7c3a7a54-a14c-4955-a198-a38c0a9282f4",
+    "ts": "2026-08-19T13:22:54.757482+00:00",
+    "incident_id": "INC-3396A975",
+    "source_agent": "analyst",
+    "type": "analysis",
+    "mitre_stage": "TA0010 Exfiltration",
+    "confidence": 0.94,
+    "risk": "high",
+    "payload_json": "{\"incident_id\": \"INC-3396A975\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The detection shows that the attacker originating from IP\\u202f192.168.43.103 streamed confidential PII data out of the environment. This indicates the adversary had already compromised internal systems enough to locate and retrieve the sensitive information before attempting exfiltration. The exfiltration activity was captured by the TA0010 \\u201cConfidential PII Data Exfiltration Stream Detected\\u201d detector.\", \"mitre_chain\": [\"TA0010 Exfiltration\"], \"correlated_events_count\": 1, \"severity\": \"HIGH\"}",
+    "payload": {
+      "incident_id": "INC-3396A975",
+      "attacker_ip": "192.168.43.103",
+      "narrative": "The detection shows that the attacker originating from IP\u202f192.168.43.103 streamed confidential PII data out of the environment. This indicates the adversary had already compromised internal systems enough to locate and retrieve the sensitive information before attempting exfiltration. The exfiltration activity was captured by the TA0010 \u201cConfidential PII Data Exfiltration Stream Detected\u201d detector.",
+      "mitre_chain": [
+        "TA0010 Exfiltration"
+      ],
+      "correlated_events_count": 1,
+      "severity": "HIGH"
+    }
+  },
+  {
+    "id": "72f128bf-0265-4f40-a93f-1c94806e2115",
+    "ts": "2026-08-19T13:22:56.189787+00:00",
+    "incident_id": "INC-3396A975",
+    "source_agent": "remediation",
+    "type": "remediation_proposal",
+    "mitre_stage": null,
+    "confidence": 0.88,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-3396A975\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+    "payload": {
+      "incident_id": "INC-3396A975",
+      "options": [
+        {
+          "action": "isolate_ip",
+          "target": "192.168.43.103",
+          "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+          "confidence": 0.88,
+          "risk": "low"
+        },
+        {
+          "action": "terminate_active_sessions",
+          "target": "all_unauthenticated",
+          "description": "Revoke active web sessions and invalidate token pools",
+          "confidence": 0.72,
+          "risk": "medium"
+        },
+        {
+          "action": "quarantine_target_service",
+          "target": "port_5000",
+          "description": "Quarantine company web server port to isolated VLAN",
+          "confidence": 0.45,
+          "risk": "high"
+        }
+      ],
+      "recommended_action": "isolate_ip"
+    }
+  },
+  {
+    "id": "1135d23f-5499-4da6-8b01-2e0b6783d90f",
+    "ts": "2026-08-19T13:22:58.733031+00:00",
+    "incident_id": "INC-3396A975",
+    "source_agent": "decision",
+    "type": "decision",
+    "mitre_stage": null,
+    "confidence": 0.9,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-3396A975\", \"outcome\": \"AUTO_EXECUTE\", \"score\": 0.9, \"reason\": \"Confidence score (0.90) met auto-execution threshold (0.75)\", \"selected_action\": \"isolate_ip\", \"target\": \"192.168.43.103\"}",
+    "payload": {
+      "incident_id": "INC-3396A975",
+      "outcome": "AUTO_EXECUTE",
+      "score": 0.9,
+      "reason": "Confidence score (0.90) met auto-execution threshold (0.75)",
+      "selected_action": "isolate_ip",
+      "target": "192.168.43.103"
+    }
+  },
+  {
+    "id": "89c1dc9b-d365-4792-9473-f0194f0d7cba",
+    "ts": "2026-08-19T13:22:59.678761+00:00",
+    "incident_id": "INC-3396A975",
+    "source_agent": "remediation",
+    "type": "email_quarantined",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-3396A975\", \"status\": \"DELETED\", \"message\": \"Phishing lure email purged & quarantined from Nandi Traders inbox\"}",
+    "payload": {
+      "incident_id": "INC-3396A975",
+      "status": "DELETED",
+      "message": "Phishing lure email purged & quarantined from Nandi Traders inbox"
+    }
+  },
+  {
+    "id": "ac007698-4c36-4bce-8783-cf200257bfbf",
+    "ts": "2026-08-19T13:22:59.701943+00:00",
+    "incident_id": "INC-3396A975",
+    "source_agent": "remediation",
+    "type": "action_executed",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-3396A975\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"FAILED\", \"details\": \"Rule applied: DROP traffic from 192.168.43.103 | \\u2709\\ufe0f Phishing lure email automatically purged from Nandi Traders inbox (MailHog)\", \"timestamp\": 1787145779.7018507}",
+    "payload": {
+      "incident_id": "INC-3396A975",
+      "action": "isolate_ip",
+      "target": "192.168.43.103",
+      "status": "FAILED",
+      "details": "Rule applied: DROP traffic from 192.168.43.103 | \u2709\ufe0f Phishing lure email automatically purged from Nandi Traders inbox (MailHog)",
+      "timestamp": 1787145779.7018507
+    }
+  },
+  {
+    "id": "6456507f-89e6-4570-bd9c-db5021787b54",
+    "ts": "2026-08-19T13:23:01.822737+00:00",
+    "incident_id": "INC-3396A975",
+    "source_agent": "comms",
+    "type": "report_generated",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-3396A975\", \"target\": \"192.168.43.103\", \"chain\": [\"TA0010 Exfiltration\"], \"outcome\": \"AUTO_EXECUTE\", \"report_text\": \"- **Executive Summary:**  \\n  Our monitoring systems detected that an internal host (IP\\u202f192.168.43.103) streamed confidential personally identifiable information (PII) outside the network. The breach indicates the attacker had already gained sufficient access to locate and extract sensitive data.  \\n\\n- **Impact Assessment:**  \\n  Potential exposure of confidential PII could lead to regulatory penalties, reputational damage, and increased risk of identity theft for affected individuals.  \\n\\n- **Defense Action Taken:**  \\n  Automated response was triggered (AUTO_EXECUTE) to block the source host, terminate the data stream, and initiate forensic logging for further investigation.\", \"created_at\": 1787145781.8226898}",
+    "payload": {
+      "incident_id": "INC-3396A975",
+      "target": "192.168.43.103",
+      "chain": [
+        "TA0010 Exfiltration"
+      ],
+      "outcome": "AUTO_EXECUTE",
+      "report_text": "- **Executive Summary:**  \n  Our monitoring systems detected that an internal host (IP\u202f192.168.43.103) streamed confidential personally identifiable information (PII) outside the network. The breach indicates the attacker had already gained sufficient access to locate and extract sensitive data.  \n\n- **Impact Assessment:**  \n  Potential exposure of confidential PII could lead to regulatory penalties, reputational damage, and increased risk of identity theft for affected individuals.  \n\n- **Defense Action Taken:**  \n  Automated response was triggered (AUTO_EXECUTE) to block the source host, terminate the data stream, and initiate forensic logging for further investigation.",
+      "created_at": 1787145781.8226898
+    }
+  }
+]

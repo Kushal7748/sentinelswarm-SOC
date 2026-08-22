@@ -1,0 +1,21 @@
+[
+  {
+    "id": "50cbb37e-014b-44af-87dd-1d979ab30259",
+    "ts": "2026-08-21T07:16:09.939524+00:00",
+    "incident_id": "INC-TEST-123",
+    "source_agent": "remediation",
+    "type": "action_executed",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-TEST-123\", \"action\": \"isolate_ip\", \"target\": \"192.168.1.8\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.1.8\", \"timestamp\": 1787296569.939491}",
+    "payload": {
+      "incident_id": "INC-TEST-123",
+      "action": "isolate_ip",
+      "target": "192.168.1.8",
+      "status": "COMPLETED",
+      "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.1.8",
+      "timestamp": 1787296569.939491
+    }
+  }
+]

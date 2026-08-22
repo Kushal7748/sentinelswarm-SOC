@@ -1,0 +1,361 @@
+{
+  "incident_id": "INC-B38BF806",
+  "recorded_at": "2026-08-18 04:29:20 UTC",
+  "attack_type": "full_chain",
+  "attacker_ip": "192.168.43.103",
+  "status": "RESOLVED",
+  "decision_outcome": "ESCALATE_TO_HUMAN",
+  "mitre_chain": [
+    "TA0001 Initial Access",
+    "TA0010 Exfiltration"
+  ],
+  "executive_summary": "- **Executive Summary:**  \n  A malicious actor from IP\u202f192.168.43.103 exploited a SQL\u2011injection flaw to gain initial access and moved laterally to harvest confidential personally identifiable information (PII). The attacker successfully exfiltrated the data out of the network, completing a data\u2011theft operation.\n\n- **Impact Assessment:**  \n  Sensitive PII has been disclosed, exposing the organization to regulatory penalties, reputational harm, and potential fraud losses.\n\n- **Defense Action Taken:**  \n  The intrusion was isolated, the vulnerable application was patched, and all exfiltration channels were blocked while the incident is being escalated for full forensic investigation.",
+  "technical_narrative": "The attacker at IP\u202f192.168.43.103 first gained entry to the target system by exploiting a SQL injection vulnerability, as indicated by the TA0001 Initial Access detection. After establishing a foothold, the adversary navigated within the compromised environment to locate and aggregate confidential personally identifiable information. Finally, the TA0010 Exfiltration alert shows that the gathered PII was streamed out of the network, completing the data\u2011theft phase of the attack.",
+  "custom_notes": "",
+  "total_events_captured": 17,
+  "folder_path": "D:\\karthik\\software\\SentinelSwarm-LaptopB\\incident_records\\INC-B38BF806",
+  "events": [
+    {
+      "id": "cbf08147-cc17-4e9c-afb7-beec9277d9da",
+      "ts": "2026-08-18T04:27:57.557796+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "detector.intrusion",
+      "type": "detection",
+      "mitre_stage": "TA0001 Initial Access",
+      "confidence": 0.96,
+      "risk": "high",
+      "payload_json": "{\"title\": \"SQL Injection Signature Identified\", \"source_ip\": \"192.168.43.103\", \"matched_pattern\": \"UNION\\\\s+SELECT\", \"log_entry\": \"POST /login HTTP/1.1 200 - user=' UNION SELECT * FROM users --\", \"target_endpoint\": \"/login\"}",
+      "payload": {
+        "title": "SQL Injection Signature Identified",
+        "source_ip": "192.168.43.103",
+        "matched_pattern": "UNION\\s+SELECT",
+        "log_entry": "POST /login HTTP/1.1 200 - user=' UNION SELECT * FROM users --",
+        "target_endpoint": "/login"
+      }
+    },
+    {
+      "id": "af6c451e-71d6-43db-995b-938cd508c431",
+      "ts": "2026-08-18T04:27:57.584894+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "detector.exfil",
+      "type": "detection",
+      "mitre_stage": "TA0010 Exfiltration",
+      "confidence": 0.95,
+      "risk": "high",
+      "payload_json": "{\"title\": \"Confidential PII Data Exfiltration Stream Detected\", \"destination_port\": \"9000\", \"indicators\": [\"3 email addresses staged\", \"1 credit card numeric sequences staged\"], \"payload_size_bytes\": 98, \"sample_preview\": \"customer_emails: alice@example.com, bob@example.com, dev@nanditraders.in | CC: 4111-2222-3333-4444\"}",
+      "payload": {
+        "title": "Confidential PII Data Exfiltration Stream Detected",
+        "destination_port": "9000",
+        "indicators": [
+          "3 email addresses staged",
+          "1 credit card numeric sequences staged"
+        ],
+        "payload_size_bytes": 98,
+        "sample_preview": "customer_emails: alice@example.com, bob@example.com, dev@nanditraders.in | CC: 4111-2222-3333-4444"
+      }
+    },
+    {
+      "id": "b89b0ffb-de29-424f-bd73-f4be0a6fd4fc",
+      "ts": "2026-08-18T04:27:59.796224+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "analyst",
+      "type": "analysis",
+      "mitre_stage": "TA0010 Exfiltration",
+      "confidence": 0.94,
+      "risk": "high",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The attacker at IP\\u202f192.168.43.103 first gained entry to the target system by exploiting a SQL injection vulnerability, as indicated by the TA0001 Initial Access detection. After establishing a foothold, the adversary navigated within the compromised environment to locate and aggregate confidential personally identifiable information. Finally, the TA0010 Exfiltration alert shows that the gathered PII was streamed out of the network, completing the data\\u2011theft phase of the attack.\", \"mitre_chain\": [\"TA0001 Initial Access\", \"TA0010 Exfiltration\"], \"correlated_events_count\": 2, \"severity\": \"CRITICAL\"}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "attacker_ip": "192.168.43.103",
+        "narrative": "The attacker at IP\u202f192.168.43.103 first gained entry to the target system by exploiting a SQL injection vulnerability, as indicated by the TA0001 Initial Access detection. After establishing a foothold, the adversary navigated within the compromised environment to locate and aggregate confidential personally identifiable information. Finally, the TA0010 Exfiltration alert shows that the gathered PII was streamed out of the network, completing the data\u2011theft phase of the attack.",
+        "mitre_chain": [
+          "TA0001 Initial Access",
+          "TA0010 Exfiltration"
+        ],
+        "correlated_events_count": 2,
+        "severity": "CRITICAL"
+      }
+    },
+    {
+      "id": "5b0cb070-7150-45c0-a6e4-e8eefb7de2fc",
+      "ts": "2026-08-18T04:28:01.228983+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "remediation",
+      "type": "remediation_proposal",
+      "mitre_stage": null,
+      "confidence": 0.88,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "options": [
+          {
+            "action": "isolate_ip",
+            "target": "192.168.43.103",
+            "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+            "confidence": 0.88,
+            "risk": "low"
+          },
+          {
+            "action": "terminate_active_sessions",
+            "target": "all_unauthenticated",
+            "description": "Revoke active web sessions and invalidate token pools",
+            "confidence": 0.72,
+            "risk": "medium"
+          },
+          {
+            "action": "quarantine_target_service",
+            "target": "port_5000",
+            "description": "Quarantine company web server port to isolated VLAN",
+            "confidence": 0.45,
+            "risk": "high"
+          }
+        ],
+        "recommended_action": "isolate_ip"
+      }
+    },
+    {
+      "id": "30eaf25b-f338-40b3-8c1a-1664e88f98a4",
+      "ts": "2026-08-18T04:28:03.775140+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "decision",
+      "type": "decision",
+      "mitre_stage": null,
+      "confidence": 0.55,
+      "risk": "medium",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"outcome\": \"ESCALATE_TO_HUMAN\", \"score\": 0.55, \"reason\": \"Presenter manual escalation override triggered\", \"selected_action\": \"isolate_ip\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "outcome": "ESCALATE_TO_HUMAN",
+        "score": 0.55,
+        "reason": "Presenter manual escalation override triggered",
+        "selected_action": "isolate_ip",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "565e60e6-3c8b-448d-9783-2a6ce397bfa9",
+      "ts": "2026-08-18T04:28:05.771702+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "comms",
+      "type": "report_generated",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"target\": \"192.168.43.103\", \"chain\": [\"TA0001 Initial Access\", \"TA0010 Exfiltration\"], \"outcome\": \"ESCALATE_TO_HUMAN\", \"report_text\": \"- **Executive Summary:**  \\n  A malicious actor from IP\\u202f192.168.43.103 exploited a SQL\\u2011injection flaw to gain initial access and moved laterally to harvest confidential personally identifiable information (PII). The attacker successfully exfiltrated the data out of the network, completing a data\\u2011theft operation.\\n\\n- **Impact Assessment:**  \\n  Sensitive PII has been disclosed, exposing the organization to regulatory penalties, reputational harm, and potential fraud losses.\\n\\n- **Defense Action Taken:**  \\n  The intrusion was isolated, the vulnerable application was patched, and all exfiltration channels were blocked while the incident is being escalated for full forensic investigation.\", \"created_at\": 1787027285.7716594}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "target": "192.168.43.103",
+        "chain": [
+          "TA0001 Initial Access",
+          "TA0010 Exfiltration"
+        ],
+        "outcome": "ESCALATE_TO_HUMAN",
+        "report_text": "- **Executive Summary:**  \n  A malicious actor from IP\u202f192.168.43.103 exploited a SQL\u2011injection flaw to gain initial access and moved laterally to harvest confidential personally identifiable information (PII). The attacker successfully exfiltrated the data out of the network, completing a data\u2011theft operation.\n\n- **Impact Assessment:**  \n  Sensitive PII has been disclosed, exposing the organization to regulatory penalties, reputational harm, and potential fraud losses.\n\n- **Defense Action Taken:**  \n  The intrusion was isolated, the vulnerable application was patched, and all exfiltration channels were blocked while the incident is being escalated for full forensic investigation.",
+        "created_at": 1787027285.7716594
+      }
+    },
+    {
+      "id": "34751fef-4b11-4798-abd8-3353b1794dc0",
+      "ts": "2026-08-18T04:28:07.299333+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "comms",
+      "type": "escalation_sent",
+      "mitre_stage": null,
+      "confidence": 0.9,
+      "risk": "medium",
+      "payload_json": "{\"channel\": \"WHATSAPP\", \"incident_id\": \"INC-B38BF806\", \"options\": [\"1. EXECUTE (Auto-execute containment)\", \"2. DONT EXECUTE (Hold & monitor without blocking)\", \"3. INVESTIGATE (Quarantine & forensic review)\", \"Custom instruction / question\"], \"status\": \"Human-readable decision brief dispatched to Handler. Awaiting selection...\"}",
+      "payload": {
+        "channel": "WHATSAPP",
+        "incident_id": "INC-B38BF806",
+        "options": [
+          "1. EXECUTE (Auto-execute containment)",
+          "2. DONT EXECUTE (Hold & monitor without blocking)",
+          "3. INVESTIGATE (Quarantine & forensic review)",
+          "Custom instruction / question"
+        ],
+        "status": "Human-readable decision brief dispatched to Handler. Awaiting selection..."
+      }
+    },
+    {
+      "id": "0905349c-5fb5-4a59-9811-8599d9158f69",
+      "ts": "2026-08-18T04:28:39.819308+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "human_reviewer",
+      "type": "human_response",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"decision\": \"EXECUTE\", \"channel\": \"DASHBOARD_UI\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "decision": "EXECUTE",
+        "channel": "DASHBOARD_UI",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "9018d141-4a80-4eaf-a522-d93a098be2da",
+      "ts": "2026-08-18T04:28:41.348245+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103\", \"timestamp\": 1787027321.3481765}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "COMPLETED",
+        "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103",
+        "timestamp": 1787027321.3481765
+      }
+    },
+    {
+      "id": "7f801d3c-2571-41d4-8225-33d3ae6d1e34",
+      "ts": "2026-08-18T04:28:42.607746+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "human_reviewer",
+      "type": "human_response",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"decision\": \"EXECUTE\", \"channel\": \"DASHBOARD_UI\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "decision": "EXECUTE",
+        "channel": "DASHBOARD_UI",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "c5b43345-7184-4a55-a100-ea0abf932b15",
+      "ts": "2026-08-18T04:28:44.128187+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103\", \"timestamp\": 1787027324.1281567}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "COMPLETED",
+        "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103",
+        "timestamp": 1787027324.1281567
+      }
+    },
+    {
+      "id": "c860549d-bfa3-4905-88fb-6b2026212831",
+      "ts": "2026-08-18T04:28:45.432840+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "human_reviewer",
+      "type": "human_response",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"decision\": \"EXECUTE\", \"channel\": \"DASHBOARD_UI\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "decision": "EXECUTE",
+        "channel": "DASHBOARD_UI",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "319f1a86-8c42-4127-aadd-befa908df6f7",
+      "ts": "2026-08-18T04:28:46.958464+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103\", \"timestamp\": 1787027326.9584355}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "COMPLETED",
+        "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103",
+        "timestamp": 1787027326.9584355
+      }
+    },
+    {
+      "id": "a4a61142-d09d-4980-b7a1-5e889e4a4e1b",
+      "ts": "2026-08-18T04:29:09.659088+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "human_reviewer",
+      "type": "human_response",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"decision\": \"EXECUTE\", \"channel\": \"DASHBOARD_UI\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "decision": "EXECUTE",
+        "channel": "DASHBOARD_UI",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "fa345e73-82c7-4792-af16-e6179c95e9ed",
+      "ts": "2026-08-18T04:29:11.178262+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103\", \"timestamp\": 1787027351.1782098}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "COMPLETED",
+        "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103",
+        "timestamp": 1787027351.1782098
+      }
+    },
+    {
+      "id": "cab6a4d3-44c7-4e4d-9353-7d9a4a2de9be",
+      "ts": "2026-08-18T04:29:12.404204+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "human_reviewer",
+      "type": "human_response",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"decision\": \"EXECUTE\", \"channel\": \"DASHBOARD_UI\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "decision": "EXECUTE",
+        "channel": "DASHBOARD_UI",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "45b9ac42-9a50-44b7-8e20-46934e7407b3",
+      "ts": "2026-08-18T04:29:13.928134+00:00",
+      "incident_id": "INC-B38BF806",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-B38BF806\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103\", \"timestamp\": 1787027353.9280982}",
+      "payload": {
+        "incident_id": "INC-B38BF806",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "COMPLETED",
+        "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103",
+        "timestamp": 1787027353.9280982
+      }
+    }
+  ]
+}

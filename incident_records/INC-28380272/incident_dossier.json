@@ -1,0 +1,252 @@
+{
+  "incident_id": "INC-28380272",
+  "recorded_at": "2026-08-18 04:17:15 UTC",
+  "attack_type": "Security Incident",
+  "attacker_ip": "127.0.0.1",
+  "status": "RESOLVED",
+  "decision_outcome": "RESOLVED",
+  "mitre_chain": [
+    "TA0043 Reconnaissance",
+    "TA0001 Initial Access",
+    "TA0002 Execution"
+  ],
+  "executive_summary": "Adversary initiated Security Incident targeting perimeter endpoints. Automated sensor swarm detected intrusion patterns across MITRE chain: TA0043 Reconnaissance -> TA0001 Initial Access -> TA0002 Execution.",
+  "technical_narrative": "Detailed telemetry correlation captured by Analyst AI.",
+  "custom_notes": "",
+  "total_events_captured": 11,
+  "folder_path": "D:\\karthik\\software\\SentinelSwarm-LaptopB\\incident_records\\INC-28380272",
+  "events": [
+    {
+      "id": "50010d56-dddd-4327-a15c-6e03ee836907",
+      "ts": "2026-08-18T03:17:43.666827+00:00",
+      "incident_id": "INC-28380272",
+      "source_agent": "detector.intrusion",
+      "type": "detection",
+      "mitre_stage": "TA0001 Initial Access",
+      "confidence": 0.96,
+      "risk": "high",
+      "payload_json": "{\"title\": \"SQL Injection Signature Identified\", \"source_ip\": \"192.168.43.103\", \"matched_pattern\": \"UNION\\\\s+SELECT\", \"log_entry\": \"POST /login HTTP/1.1 200 - user=' UNION SELECT * FROM users --\", \"target_endpoint\": \"/login\"}",
+      "payload": {
+        "title": "SQL Injection Signature Identified",
+        "source_ip": "192.168.43.103",
+        "matched_pattern": "UNION\\s+SELECT",
+        "log_entry": "POST /login HTTP/1.1 200 - user=' UNION SELECT * FROM users --",
+        "target_endpoint": "/login"
+      }
+    },
+    {
+      "id": "ac8b0be7-e01d-4a63-b1d8-7ffc454046da",
+      "ts": "2026-08-18T03:17:43.684144+00:00",
+      "incident_id": "INC-28380272",
+      "source_agent": "detector.exfil",
+      "type": "detection",
+      "mitre_stage": "TA0010 Exfiltration",
+      "confidence": 0.95,
+      "risk": "high",
+      "payload_json": "{\"title\": \"Confidential PII Data Exfiltration Stream Detected\", \"destination_port\": \"9000\", \"indicators\": [\"3 email addresses staged\", \"1 credit card numeric sequences staged\"], \"payload_size_bytes\": 98, \"sample_preview\": \"customer_emails: alice@example.com, bob@example.com, dev@nanditraders.in | CC: 4111-2222-3333-4444\"}",
+      "payload": {
+        "title": "Confidential PII Data Exfiltration Stream Detected",
+        "destination_port": "9000",
+        "indicators": [
+          "3 email addresses staged",
+          "1 credit card numeric sequences staged"
+        ],
+        "payload_size_bytes": 98,
+        "sample_preview": "customer_emails: alice@example.com, bob@example.com, dev@nanditraders.in | CC: 4111-2222-3333-4444"
+      }
+    },
+    {
+      "id": "544617c2-4c71-4fd8-a5e7-014f355e9408",
+      "ts": "2026-08-18T03:17:52.204991+00:00",
+      "incident_id": "INC-28380272",
+      "source_agent": "analyst",
+      "type": "analysis",
+      "mitre_stage": "TA0010 Exfiltration",
+      "confidence": 0.94,
+      "risk": "high",
+      "payload_json": "{\"incident_id\": \"INC-28380272\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The latest incident telemetry recorded on the Context Bus involved a multi-stage intrusion attempt. Remediation and Decision agents executed automated IP containment.\", \"mitre_chain\": [\"TA0001 Initial Access\", \"TA0010 Exfiltration\"], \"correlated_events_count\": 2, \"severity\": \"CRITICAL\"}",
+      "payload": {
+        "incident_id": "INC-28380272",
+        "attacker_ip": "192.168.43.103",
+        "narrative": "The latest incident telemetry recorded on the Context Bus involved a multi-stage intrusion attempt. Remediation and Decision agents executed automated IP containment.",
+        "mitre_chain": [
+          "TA0001 Initial Access",
+          "TA0010 Exfiltration"
+        ],
+        "correlated_events_count": 2,
+        "severity": "CRITICAL"
+      }
+    },
+    {
+      "id": "cd228300-b163-4ae2-a50f-18005c9b1a15",
+      "ts": "2026-08-18T03:17:53.642057+00:00",
+      "incident_id": "INC-28380272",
+      "source_agent": "remediation",
+      "type": "remediation_proposal",
+      "mitre_stage": null,
+      "confidence": 0.88,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-28380272\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+      "payload": {
+        "incident_id": "INC-28380272",
+        "options": [
+          {
+            "action": "isolate_ip",
+            "target": "192.168.43.103",
+            "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+            "confidence": 0.88,
+            "risk": "low"
+          },
+          {
+            "action": "terminate_active_sessions",
+            "target": "all_unauthenticated",
+            "description": "Revoke active web sessions and invalidate token pools",
+            "confidence": 0.72,
+            "risk": "medium"
+          },
+          {
+            "action": "quarantine_target_service",
+            "target": "port_5000",
+            "description": "Quarantine company web server port to isolated VLAN",
+            "confidence": 0.45,
+            "risk": "high"
+          }
+        ],
+        "recommended_action": "isolate_ip"
+      }
+    },
+    {
+      "id": "dcf4bce3-f59b-4355-a78c-a7cef24c0872",
+      "ts": "2026-08-18T03:17:56.192204+00:00",
+      "incident_id": "INC-28380272",
+      "source_agent": "decision",
+      "type": "decision",
+      "mitre_stage": null,
+      "confidence": 0.55,
+      "risk": "medium",
+      "payload_json": "{\"incident_id\": \"INC-28380272\", \"outcome\": \"ESCALATE_TO_HUMAN\", \"score\": 0.55, \"reason\": \"Presenter manual escalation override triggered\", \"selected_action\": \"isolate_ip\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-28380272",
+        "outcome": "ESCALATE_TO_HUMAN",
+        "score": 0.55,
+        "reason": "Presenter manual escalation override triggered",
+        "selected_action": "isolate_ip",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "4f1d81a4-c021-4404-9e84-a6edda712c64",
+      "ts": "2026-08-18T03:18:04.181549+00:00",
+      "incident_id": "INC-28380272",
+      "source_agent": "comms",
+      "type": "report_generated",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-28380272\", \"target\": \"192.168.43.103\", \"chain\": [\"TA0001 Initial Access\", \"TA0010 Exfiltration\"], \"outcome\": \"ESCALATE_TO_HUMAN\", \"report_text\": \"The latest incident telemetry recorded on the Context Bus involved a multi-stage intrusion attempt. Remediation and Decision agents executed automated IP containment.\", \"created_at\": 1787023084.1814997}",
+      "payload": {
+        "incident_id": "INC-28380272",
+        "target": "192.168.43.103",
+        "chain": [
+          "TA0001 Initial Access",
+          "TA0010 Exfiltration"
+        ],
+        "outcome": "ESCALATE_TO_HUMAN",
+        "report_text": "The latest incident telemetry recorded on the Context Bus involved a multi-stage intrusion attempt. Remediation and Decision agents executed automated IP containment.",
+        "created_at": 1787023084.1814997
+      }
+    },
+    {
+      "id": "57d18fd4-413e-41cc-8e3e-0f97fedb2443",
+      "ts": "2026-08-18T03:18:04.930070+00:00",
+      "incident_id": "INC-28380272",
+      "source_agent": "comms",
+      "type": "escalation_sent",
+      "mitre_stage": null,
+      "confidence": 0.9,
+      "risk": "medium",
+      "payload_json": "{\"channel\": \"WHATSAPP\", \"incident_id\": \"INC-28380272\", \"options\": [\"1. EXECUTE (Auto-execute containment)\", \"2. DONT EXECUTE (Hold & monitor without blocking)\", \"3. INVESTIGATE (Quarantine & forensic review)\", \"Custom instruction / question\"], \"status\": \"Human-readable decision brief dispatched to Handler. Awaiting selection...\"}",
+      "payload": {
+        "channel": "WHATSAPP",
+        "incident_id": "INC-28380272",
+        "options": [
+          "1. EXECUTE (Auto-execute containment)",
+          "2. DONT EXECUTE (Hold & monitor without blocking)",
+          "3. INVESTIGATE (Quarantine & forensic review)",
+          "Custom instruction / question"
+        ],
+        "status": "Human-readable decision brief dispatched to Handler. Awaiting selection..."
+      }
+    },
+    {
+      "id": "9c47f6b2-0c06-44d6-9d7f-3bb6e48af273",
+      "ts": "2026-08-18T03:18:43.582228+00:00",
+      "incident_id": "INC-28380272",
+      "source_agent": "human_reviewer",
+      "type": "human_response",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-28380272\", \"decision\": \"DONT_EXECUTE\", \"channel\": \"DASHBOARD_UI\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-28380272",
+        "decision": "DONT_EXECUTE",
+        "channel": "DASHBOARD_UI",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "b480a060-dc77-4ad5-aa09-6483cc51a415",
+      "ts": "2026-08-18T03:18:50.455421+00:00",
+      "incident_id": "INC-28380272",
+      "source_agent": "human_reviewer",
+      "type": "human_response",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-28380272\", \"decision\": \"EXECUTE\", \"channel\": \"DASHBOARD_UI\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-28380272",
+        "decision": "EXECUTE",
+        "channel": "DASHBOARD_UI",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "1f531323-24ff-4a2e-a386-501ac99baeec",
+      "ts": "2026-08-18T03:18:50.550182+00:00",
+      "incident_id": "INC-28380272",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-28380272\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"FAILED\", \"details\": \"Rule applied: DROP traffic from 192.168.43.103\", \"timestamp\": 1787023130.5501022}",
+      "payload": {
+        "incident_id": "INC-28380272",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "FAILED",
+        "details": "Rule applied: DROP traffic from 192.168.43.103",
+        "timestamp": 1787023130.5501022
+      }
+    },
+    {
+      "id": "1f4be683-76a9-4b98-840d-d4f1f8bd151a",
+      "ts": "2026-08-18T03:19:05.841647+00:00",
+      "incident_id": "INC-28380272",
+      "source_agent": "human_reviewer",
+      "type": "human_response",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-28380272\", \"decision\": \"INVESTIGATE\", \"channel\": \"DASHBOARD_UI\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-28380272",
+        "decision": "INVESTIGATE",
+        "channel": "DASHBOARD_UI",
+        "target": "192.168.43.103"
+      }
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+[
+  {
+    "id": "74d48a80-c0a8-49e2-919a-05bc2691423e",
+    "ts": "2026-08-18T04:35:35.710102+00:00",
+    "incident_id": "INC-18B60704",
+    "source_agent": "detector.exfil",
+    "type": "detection",
+    "mitre_stage": "TA0010 Exfiltration",
+    "confidence": 0.99,
+    "risk": "high",
+    "payload_json": "{\"title\": \"Confidential PII Data Exfiltration Stream Detected\", \"destination_port\": \"9000\", \"indicators\": [\"3 email addresses staged\", \"3 credit card numeric sequences staged\", \"3 SSN/ID identifiers found\"], \"payload_size_bytes\": 197, \"sample_preview\": \"EXFIL_STREAM: customer_records.csv\\njohn.doe@example.com,4111-2221-3334-9999,987-65-4321\\nsarah.c@company.org,5500-0001-2233-4455,123-45-6789\\nrajesh.k@n\"}",
+    "payload": {
+      "title": "Confidential PII Data Exfiltration Stream Detected",
+      "destination_port": "9000",
+      "indicators": [
+        "3 email addresses staged",
+        "3 credit card numeric sequences staged",
+        "3 SSN/ID identifiers found"
+      ],
+      "payload_size_bytes": 197,
+      "sample_preview": "EXFIL_STREAM: customer_records.csv\njohn.doe@example.com,4111-2221-3334-9999,987-65-4321\nsarah.c@company.org,5500-0001-2233-4455,123-45-6789\nrajesh.k@n"
+    }
+  },
+  {
+    "id": "18dd8b6b-430b-4110-a6b2-e442749cf96d",
+    "ts": "2026-08-18T04:35:38.252573+00:00",
+    "incident_id": "INC-18B60704",
+    "source_agent": "analyst",
+    "type": "analysis",
+    "mitre_stage": "TA0010 Exfiltration",
+    "confidence": 0.94,
+    "risk": "high",
+    "payload_json": "{\"incident_id\": \"INC-18B60704\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The attacker operating from IP\\u202f192.168.43.103 established a connection to the target environment. From that foothold, they accessed confidential personally identifiable information stored on the compromised system. The data was then transmitted out of the network, generating a TA0010\\u202fExfiltration detection for a confidential PII data exfiltration stream.\", \"mitre_chain\": [\"TA0010 Exfiltration\"], \"correlated_events_count\": 1, \"severity\": \"HIGH\"}",
+    "payload": {
+      "incident_id": "INC-18B60704",
+      "attacker_ip": "192.168.43.103",
+      "narrative": "The attacker operating from IP\u202f192.168.43.103 established a connection to the target environment. From that foothold, they accessed confidential personally identifiable information stored on the compromised system. The data was then transmitted out of the network, generating a TA0010\u202fExfiltration detection for a confidential PII data exfiltration stream.",
+      "mitre_chain": [
+        "TA0010 Exfiltration"
+      ],
+      "correlated_events_count": 1,
+      "severity": "HIGH"
+    }
+  },
+  {
+    "id": "023ba42b-7ce1-41ee-b3b3-3d41f9ef9daf",
+    "ts": "2026-08-18T04:35:39.671379+00:00",
+    "incident_id": "INC-18B60704",
+    "source_agent": "remediation",
+    "type": "remediation_proposal",
+    "mitre_stage": null,
+    "confidence": 0.88,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-18B60704\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+    "payload": {
+      "incident_id": "INC-18B60704",
+      "options": [
+        {
+          "action": "isolate_ip",
+          "target": "192.168.43.103",
+          "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+          "confidence": 0.88,
+          "risk": "low"
+        },
+        {
+          "action": "terminate_active_sessions",
+          "target": "all_unauthenticated",
+          "description": "Revoke active web sessions and invalidate token pools",
+          "confidence": 0.72,
+          "risk": "medium"
+        },
+        {
+          "action": "quarantine_target_service",
+          "target": "port_5000",
+          "description": "Quarantine company web server port to isolated VLAN",
+          "confidence": 0.45,
+          "risk": "high"
+        }
+      ],
+      "recommended_action": "isolate_ip"
+    }
+  },
+  {
+    "id": "dbe45505-d456-4ad9-b9ce-e7a4a870f5df",
+    "ts": "2026-08-18T04:35:42.227347+00:00",
+    "incident_id": "INC-18B60704",
+    "source_agent": "decision",
+    "type": "decision",
+    "mitre_stage": null,
+    "confidence": 0.9,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-18B60704\", \"outcome\": \"AUTO_EXECUTE\", \"score\": 0.9, \"reason\": \"Confidence score (0.90) met auto-execution threshold (0.75)\", \"selected_action\": \"isolate_ip\", \"target\": \"192.168.43.103\"}",
+    "payload": {
+      "incident_id": "INC-18B60704",
+      "outcome": "AUTO_EXECUTE",
+      "score": 0.9,
+      "reason": "Confidence score (0.90) met auto-execution threshold (0.75)",
+      "selected_action": "isolate_ip",
+      "target": "192.168.43.103"
+    }
+  },
+  {
+    "id": "9603e964-4ebc-4f33-9739-a50201190d70",
+    "ts": "2026-08-18T04:35:43.744609+00:00",
+    "incident_id": "INC-18B60704",
+    "source_agent": "remediation",
+    "type": "action_executed",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-18B60704\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103\", \"timestamp\": 1787027743.7445755}",
+    "payload": {
+      "incident_id": "INC-18B60704",
+      "action": "isolate_ip",
+      "target": "192.168.43.103",
+      "status": "COMPLETED",
+      "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103",
+      "timestamp": 1787027743.7445755
+    }
+  },
+  {
+    "id": "d0f3c7ae-1ecf-48d8-93ac-dc346b3196a0",
+    "ts": "2026-08-18T04:35:46.050212+00:00",
+    "incident_id": "INC-18B60704",
+    "source_agent": "comms",
+    "type": "report_generated",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-18B60704\", \"target\": \"192.168.43.103\", \"chain\": [\"TA0010 Exfiltration\"], \"outcome\": \"AUTO_EXECUTE\", \"report_text\": \"- **Executive Summary:**  \\n  We identified unauthorized access from internal IP\\u202f192.168.43.103 that resulted in the extraction of confidential personally identifiable information (PII).  \\n  The incident was automatically detected and containment actions were triggered without manual intervention.  \\n\\n- **Impact Assessment:**  \\n  Sensitive PII has been exfiltrated, creating privacy, regulatory, and reputational risks.  \\n\\n- **Defense Action Taken:**  \\n  Automated response isolated the compromised host, blocked the outbound data stream, and began forensic evidence collection.\", \"created_at\": 1787027746.050176}",
+    "payload": {
+      "incident_id": "INC-18B60704",
+      "target": "192.168.43.103",
+      "chain": [
+        "TA0010 Exfiltration"
+      ],
+      "outcome": "AUTO_EXECUTE",
+      "report_text": "- **Executive Summary:**  \n  We identified unauthorized access from internal IP\u202f192.168.43.103 that resulted in the extraction of confidential personally identifiable information (PII).  \n  The incident was automatically detected and containment actions were triggered without manual intervention.  \n\n- **Impact Assessment:**  \n  Sensitive PII has been exfiltrated, creating privacy, regulatory, and reputational risks.  \n\n- **Defense Action Taken:**  \n  Automated response isolated the compromised host, blocked the outbound data stream, and began forensic evidence collection.",
+      "created_at": 1787027746.050176
+    }
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "incident_id": "INC-TEST-123",
+  "recorded_at": "2026-08-21 07:16:09 UTC",
+  "attack_type": "Multi-stage attack",
+  "attacker_ip": "192.168.1.8",
+  "status": "RESOLVED",
+  "decision_outcome": "HUMAN_WHATSAPP_EXECUTE",
+  "mitre_chain": [
+    "TA0043 Reconnaissance",
+    "TA0001 Initial Access",
+    "TA0002 Execution"
+  ],
+  "executive_summary": "Adversary initiated Multi-stage attack targeting perimeter endpoints. Automated sensor swarm detected intrusion patterns across MITRE chain: TA0043 Reconnaissance -> TA0001 Initial Access -> TA0002 Execution.",
+  "technical_narrative": "Detailed telemetry correlation captured by Analyst AI.",
+  "custom_notes": "Human operator approved Option 1 (Execute Automatically) via WhatsApp: '1'",
+  "total_events_captured": 1,
+  "folder_path": "D:\\karthik\\software\\SentinelSwarm-LaptopB\\incident_records\\INC-TEST-123",
+  "events": [
+    {
+      "id": "50cbb37e-014b-44af-87dd-1d979ab30259",
+      "ts": "2026-08-21T07:16:09.939524+00:00",
+      "incident_id": "INC-TEST-123",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-TEST-123\", \"action\": \"isolate_ip\", \"target\": \"192.168.1.8\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.1.8\", \"timestamp\": 1787296569.939491}",
+      "payload": {
+        "incident_id": "INC-TEST-123",
+        "action": "isolate_ip",
+        "target": "192.168.1.8",
+        "status": "COMPLETED",
+        "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.1.8",
+        "timestamp": 1787296569.939491
+      }
+    }
+  ]
+}

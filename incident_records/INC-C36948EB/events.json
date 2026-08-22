@@ -1,0 +1,142 @@
+[
+  {
+    "id": "5217a1d8-76da-4fd5-a3a2-5bd06285e2ae",
+    "ts": "2026-08-18T04:49:29.513881+00:00",
+    "incident_id": "INC-C36948EB",
+    "source_agent": "detector.intrusion",
+    "type": "detection",
+    "mitre_stage": "TA0001 Initial Access",
+    "confidence": 0.96,
+    "risk": "high",
+    "payload_json": "{\"title\": \"SQL Injection Signature Identified\", \"source_ip\": \"192.168.43.103\", \"matched_pattern\": \"UNION\\\\s+SELECT\", \"log_entry\": \"POST /login HTTP/1.1 200 - user=' UNION SELECT * FROM users --\", \"target_endpoint\": \"/login\"}",
+    "payload": {
+      "title": "SQL Injection Signature Identified",
+      "source_ip": "192.168.43.103",
+      "matched_pattern": "UNION\\s+SELECT",
+      "log_entry": "POST /login HTTP/1.1 200 - user=' UNION SELECT * FROM users --",
+      "target_endpoint": "/login"
+    }
+  },
+  {
+    "id": "0d15d661-e805-410f-8d88-80c5242d94ed",
+    "ts": "2026-08-18T04:49:29.527295+00:00",
+    "incident_id": "INC-C36948EB",
+    "source_agent": "detector.exfil",
+    "type": "detection",
+    "mitre_stage": "TA0010 Exfiltration",
+    "confidence": 0.95,
+    "risk": "high",
+    "payload_json": "{\"title\": \"Confidential PII Data Exfiltration Stream Detected\", \"destination_port\": \"9000\", \"indicators\": [\"3 email addresses staged\", \"1 credit card numeric sequences staged\"], \"payload_size_bytes\": 98, \"sample_preview\": \"customer_emails: alice@example.com, bob@example.com, dev@nanditraders.in | CC: 4111-2222-3333-4444\"}",
+    "payload": {
+      "title": "Confidential PII Data Exfiltration Stream Detected",
+      "destination_port": "9000",
+      "indicators": [
+        "3 email addresses staged",
+        "1 credit card numeric sequences staged"
+      ],
+      "payload_size_bytes": 98,
+      "sample_preview": "customer_emails: alice@example.com, bob@example.com, dev@nanditraders.in | CC: 4111-2222-3333-4444"
+    }
+  },
+  {
+    "id": "d855df7e-6ece-4c56-bb00-fc7fd03101c3",
+    "ts": "2026-08-18T04:49:33.846221+00:00",
+    "incident_id": "INC-C36948EB",
+    "source_agent": "analyst",
+    "type": "analysis",
+    "mitre_stage": "TA0010 Exfiltration",
+    "confidence": 0.94,
+    "risk": "high",
+    "payload_json": "{\"incident_id\": \"INC-C36948EB\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The attacker originating from IP\\u202f192.168.43.103 successfully leveraged a SQL injection vulnerability, achieving initial access to the target system\\u2019s database. After establishing this foothold, the adversary navigated the compromised database to locate and aggregate confidential personally identifiable information (PII). The extracted PII was then transmitted out of the environment, triggering the exfiltration detection.\", \"mitre_chain\": [\"TA0001 Initial Access\", \"TA0010 Exfiltration\"], \"correlated_events_count\": 2, \"severity\": \"CRITICAL\"}",
+    "payload": {
+      "incident_id": "INC-C36948EB",
+      "attacker_ip": "192.168.43.103",
+      "narrative": "The attacker originating from IP\u202f192.168.43.103 successfully leveraged a SQL injection vulnerability, achieving initial access to the target system\u2019s database. After establishing this foothold, the adversary navigated the compromised database to locate and aggregate confidential personally identifiable information (PII). The extracted PII was then transmitted out of the environment, triggering the exfiltration detection.",
+      "mitre_chain": [
+        "TA0001 Initial Access",
+        "TA0010 Exfiltration"
+      ],
+      "correlated_events_count": 2,
+      "severity": "CRITICAL"
+    }
+  },
+  {
+    "id": "5307f74a-ca7e-4a72-8903-b92b26217f26",
+    "ts": "2026-08-18T04:49:35.268450+00:00",
+    "incident_id": "INC-C36948EB",
+    "source_agent": "remediation",
+    "type": "remediation_proposal",
+    "mitre_stage": null,
+    "confidence": 0.88,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-C36948EB\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+    "payload": {
+      "incident_id": "INC-C36948EB",
+      "options": [
+        {
+          "action": "isolate_ip",
+          "target": "192.168.43.103",
+          "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+          "confidence": 0.88,
+          "risk": "low"
+        },
+        {
+          "action": "terminate_active_sessions",
+          "target": "all_unauthenticated",
+          "description": "Revoke active web sessions and invalidate token pools",
+          "confidence": 0.72,
+          "risk": "medium"
+        },
+        {
+          "action": "quarantine_target_service",
+          "target": "port_5000",
+          "description": "Quarantine company web server port to isolated VLAN",
+          "confidence": 0.45,
+          "risk": "high"
+        }
+      ],
+      "recommended_action": "isolate_ip"
+    }
+  },
+  {
+    "id": "d5c3207c-9322-449d-af26-18abc9a13935",
+    "ts": "2026-08-18T04:49:37.804193+00:00",
+    "incident_id": "INC-C36948EB",
+    "source_agent": "decision",
+    "type": "decision",
+    "mitre_stage": null,
+    "confidence": 0.55,
+    "risk": "medium",
+    "payload_json": "{\"incident_id\": \"INC-C36948EB\", \"outcome\": \"ESCALATE_TO_HUMAN\", \"score\": 0.55, \"reason\": \"Presenter manual escalation override triggered\", \"selected_action\": \"isolate_ip\", \"target\": \"192.168.43.103\"}",
+    "payload": {
+      "incident_id": "INC-C36948EB",
+      "outcome": "ESCALATE_TO_HUMAN",
+      "score": 0.55,
+      "reason": "Presenter manual escalation override triggered",
+      "selected_action": "isolate_ip",
+      "target": "192.168.43.103"
+    }
+  },
+  {
+    "id": "3a2e30bd-2119-4f03-9292-9be046f61b8e",
+    "ts": "2026-08-18T04:49:40.246696+00:00",
+    "incident_id": "INC-C36948EB",
+    "source_agent": "comms",
+    "type": "report_generated",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-C36948EB\", \"target\": \"192.168.43.103\", \"chain\": [\"TA0001 Initial Access\", \"TA0010 Exfiltration\"], \"outcome\": \"ESCALATE_TO_HUMAN\", \"report_text\": \"- **Executive Summary:** The attacker exploited a SQL\\u2011injection flaw to gain unauthorized access to our database. Sensitive personal data was then exfiltrated, and the incident has been escalated for human review.  \\n\\n- **Impact Assessment:** Confidential personally identifiable information (PII) of customers has been compromised.  \\n\\n- **Defense Action Taken:** The vulnerable web service was taken offline, compromised accounts were locked, and a forensic investigation has been initiated.\", \"created_at\": 1787028580.2466717}",
+    "payload": {
+      "incident_id": "INC-C36948EB",
+      "target": "192.168.43.103",
+      "chain": [
+        "TA0001 Initial Access",
+        "TA0010 Exfiltration"
+      ],
+      "outcome": "ESCALATE_TO_HUMAN",
+      "report_text": "- **Executive Summary:** The attacker exploited a SQL\u2011injection flaw to gain unauthorized access to our database. Sensitive personal data was then exfiltrated, and the incident has been escalated for human review.  \n\n- **Impact Assessment:** Confidential personally identifiable information (PII) of customers has been compromised.  \n\n- **Defense Action Taken:** The vulnerable web service was taken offline, compromised accounts were locked, and a forensic investigation has been initiated.",
+      "created_at": 1787028580.2466717
+    }
+  }
+]

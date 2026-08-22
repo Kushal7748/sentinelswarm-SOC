@@ -1,0 +1,97 @@
+[
+  {
+    "id": "9bd3d1d4-3dfb-4c18-9b2f-f46929e87dc8",
+    "ts": "2026-08-19T04:12:58.427751+00:00",
+    "incident_id": "INC-FCF54212",
+    "source_agent": "detector.intrusion",
+    "type": "detection",
+    "mitre_stage": "TA0001 Initial Access",
+    "confidence": 0.96,
+    "risk": "high",
+    "payload_json": "{\"title\": \"SQL Injection Signature Identified\", \"source_ip\": \"192.168.43.103\", \"matched_pattern\": \"'\\\\s*OR\\\\s*'1'\\\\s*=\\\\s*'1\", \"log_entry\": \"POST /login HTTP/1.1 200 - user='admin' OR '1'='1' -- pass=xxx\", \"target_endpoint\": \"/login\"}",
+    "payload": {
+      "title": "SQL Injection Signature Identified",
+      "source_ip": "192.168.43.103",
+      "matched_pattern": "'\\s*OR\\s*'1'\\s*=\\s*'1",
+      "log_entry": "POST /login HTTP/1.1 200 - user='admin' OR '1'='1' -- pass=xxx",
+      "target_endpoint": "/login"
+    }
+  },
+  {
+    "id": "33a8d2f4-fb0f-4225-aa16-53fd3d7e0941",
+    "ts": "2026-08-19T04:13:00.600702+00:00",
+    "incident_id": "INC-FCF54212",
+    "source_agent": "analyst",
+    "type": "analysis",
+    "mitre_stage": "TA0001 Initial Access",
+    "confidence": 0.94,
+    "risk": "high",
+    "payload_json": "{\"incident_id\": \"INC-FCF54212\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The source IP\\u202f192.168.43.103 was flagged by the intrusion detector for a TA0001\\u202fInitial Access event, specifically a signature matching an attempted SQL injection. This activity indicates that the adversary successfully exploited a vulnerable database query to gain unauthorized access to the target system. No subsequent actions were recorded in the provided timeline, so the current evidence stops at the initial compromise via SQL injection.\", \"mitre_chain\": [\"TA0001 Initial Access\"], \"correlated_events_count\": 1, \"severity\": \"HIGH\"}",
+    "payload": {
+      "incident_id": "INC-FCF54212",
+      "attacker_ip": "192.168.43.103",
+      "narrative": "The source IP\u202f192.168.43.103 was flagged by the intrusion detector for a TA0001\u202fInitial Access event, specifically a signature matching an attempted SQL injection. This activity indicates that the adversary successfully exploited a vulnerable database query to gain unauthorized access to the target system. No subsequent actions were recorded in the provided timeline, so the current evidence stops at the initial compromise via SQL injection.",
+      "mitre_chain": [
+        "TA0001 Initial Access"
+      ],
+      "correlated_events_count": 1,
+      "severity": "HIGH"
+    }
+  },
+  {
+    "id": "dd8e72a8-e983-44c1-8ba0-c476e9a3e82b",
+    "ts": "2026-08-19T04:13:02.026433+00:00",
+    "incident_id": "INC-FCF54212",
+    "source_agent": "remediation",
+    "type": "remediation_proposal",
+    "mitre_stage": null,
+    "confidence": 0.88,
+    "risk": "low",
+    "payload_json": "{\"incident_id\": \"INC-FCF54212\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+    "payload": {
+      "incident_id": "INC-FCF54212",
+      "options": [
+        {
+          "action": "isolate_ip",
+          "target": "192.168.43.103",
+          "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+          "confidence": 0.88,
+          "risk": "low"
+        },
+        {
+          "action": "terminate_active_sessions",
+          "target": "all_unauthenticated",
+          "description": "Revoke active web sessions and invalidate token pools",
+          "confidence": 0.72,
+          "risk": "medium"
+        },
+        {
+          "action": "quarantine_target_service",
+          "target": "port_5000",
+          "description": "Quarantine company web server port to isolated VLAN",
+          "confidence": 0.45,
+          "risk": "high"
+        }
+      ],
+      "recommended_action": "isolate_ip"
+    }
+  },
+  {
+    "id": "34389af0-226b-4d86-af38-d8c4cdae5d11",
+    "ts": "2026-08-19T04:13:04.254589+00:00",
+    "incident_id": "INC-FCF54212",
+    "source_agent": "decision",
+    "type": "breach_uncontained",
+    "mitre_stage": null,
+    "confidence": 1.0,
+    "risk": "critical",
+    "payload_json": "{\"incident_id\": \"INC-FCF54212\", \"target\": \"192.168.43.103\", \"status\": \"BREACH_UNCONTAINED\", \"warning\": \"\\u26a0\\ufe0f SENTINELSWARM DEFENSE IS DEACTIVATED: Attack breached Nandi Traders without automated firewall containment!\", \"outcome\": \"DEFENSE_DEACTIVATED\"}",
+    "payload": {
+      "incident_id": "INC-FCF54212",
+      "target": "192.168.43.103",
+      "status": "BREACH_UNCONTAINED",
+      "warning": "\u26a0\ufe0f SENTINELSWARM DEFENSE IS DEACTIVATED: Attack breached Nandi Traders without automated firewall containment!",
+      "outcome": "DEFENSE_DEACTIVATED"
+    }
+  }
+]

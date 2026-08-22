@@ -1,0 +1,172 @@
+{
+  "incident_id": "INC-19354DBE",
+  "recorded_at": "2026-08-18 08:28:01 UTC",
+  "attack_type": "brute_force",
+  "attacker_ip": "192.168.43.103",
+  "status": "RESOLVED",
+  "decision_outcome": "AUTO_EXECUTE",
+  "mitre_chain": [
+    "TA0006 Credential Access"
+  ],
+  "executive_summary": "- **Executive Summary:** A brute\u2011force credential\u2011access attempt was detected from internal IP\u202f192.168.43.103, generating multiple rapid failed login attempts. The attacker has not yet succeeded in obtaining valid credentials.  \n\n- **Impact Assessment:** No unauthorized access was achieved; systems remain secure but are at heightened risk of continued attempts.  \n\n- **Defense Action Taken:** Automated defenses blocked the source IP and locked the targeted accounts after the failed attempts.",
+  "technical_narrative": "The attacker originating from IP\u202f192.168.43.103 initiated a credential\u2011access attempt by performing a high\u2011rate brute\u2011force login sequence. The first detection recorded three failed authentication attempts, followed shortly by a second detection showing four additional failed attempts. These successive failures indicate the attacker was actively trying to guess valid credentials but had not yet succeeded.",
+  "custom_notes": "",
+  "total_events_captured": 7,
+  "folder_path": "D:\\karthik\\software\\SentinelSwarm-LaptopB\\incident_records\\INC-19354DBE",
+  "events": [
+    {
+      "id": "06e5d991-06e4-4692-a052-5dbdc5fa2ea3",
+      "ts": "2026-08-18T08:27:51.873078+00:00",
+      "incident_id": "INC-19354DBE",
+      "source_agent": "detector.intrusion",
+      "type": "detection",
+      "mitre_stage": "TA0006 Credential Access",
+      "confidence": 0.92,
+      "risk": "high",
+      "payload_json": "{\"title\": \"High-Rate Credential Brute-Force (3 failures)\", \"source_ip\": \"192.168.43.103\", \"failure_count\": 3, \"log_entry\": \"Failed password for root from 192.168.43.103 port 2222 ssh2\", \"protocol\": \"SSH/HTTP\"}",
+      "payload": {
+        "title": "High-Rate Credential Brute-Force (3 failures)",
+        "source_ip": "192.168.43.103",
+        "failure_count": 3,
+        "log_entry": "Failed password for root from 192.168.43.103 port 2222 ssh2",
+        "protocol": "SSH/HTTP"
+      }
+    },
+    {
+      "id": "1fe9d473-5974-4bfb-a230-d6cb60b6f6f1",
+      "ts": "2026-08-18T08:27:51.915823+00:00",
+      "incident_id": "INC-19354DBE",
+      "source_agent": "detector.intrusion",
+      "type": "detection",
+      "mitre_stage": "TA0006 Credential Access",
+      "confidence": 0.92,
+      "risk": "high",
+      "payload_json": "{\"title\": \"High-Rate Credential Brute-Force (4 failures)\", \"source_ip\": \"192.168.43.103\", \"failure_count\": 4, \"log_entry\": \"Failed password for root from 192.168.43.103 port 2222 ssh2\", \"protocol\": \"SSH/HTTP\"}",
+      "payload": {
+        "title": "High-Rate Credential Brute-Force (4 failures)",
+        "source_ip": "192.168.43.103",
+        "failure_count": 4,
+        "log_entry": "Failed password for root from 192.168.43.103 port 2222 ssh2",
+        "protocol": "SSH/HTTP"
+      }
+    },
+    {
+      "id": "6386a0d2-0bd9-4f66-86e6-7ca449a8dc80",
+      "ts": "2026-08-18T08:27:54.278425+00:00",
+      "incident_id": "INC-19354DBE",
+      "source_agent": "analyst",
+      "type": "analysis",
+      "mitre_stage": "TA0006 Credential Access",
+      "confidence": 0.94,
+      "risk": "high",
+      "payload_json": "{\"incident_id\": \"INC-19354DBE\", \"attacker_ip\": \"192.168.43.103\", \"narrative\": \"The attacker originating from IP\\u202f192.168.43.103 initiated a credential\\u2011access attempt by performing a high\\u2011rate brute\\u2011force login sequence. The first detection recorded three failed authentication attempts, followed shortly by a second detection showing four additional failed attempts. These successive failures indicate the attacker was actively trying to guess valid credentials but had not yet succeeded.\", \"mitre_chain\": [\"TA0006 Credential Access\"], \"correlated_events_count\": 2, \"severity\": \"CRITICAL\"}",
+      "payload": {
+        "incident_id": "INC-19354DBE",
+        "attacker_ip": "192.168.43.103",
+        "narrative": "The attacker originating from IP\u202f192.168.43.103 initiated a credential\u2011access attempt by performing a high\u2011rate brute\u2011force login sequence. The first detection recorded three failed authentication attempts, followed shortly by a second detection showing four additional failed attempts. These successive failures indicate the attacker was actively trying to guess valid credentials but had not yet succeeded.",
+        "mitre_chain": [
+          "TA0006 Credential Access"
+        ],
+        "correlated_events_count": 2,
+        "severity": "CRITICAL"
+      }
+    },
+    {
+      "id": "fb07c3b5-58fd-42d7-8c3a-0adf9b9dcbaf",
+      "ts": "2026-08-18T08:27:55.725928+00:00",
+      "incident_id": "INC-19354DBE",
+      "source_agent": "remediation",
+      "type": "remediation_proposal",
+      "mitre_stage": null,
+      "confidence": 0.88,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-19354DBE\", \"options\": [{\"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"description\": \"Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway\", \"confidence\": 0.88, \"risk\": \"low\"}, {\"action\": \"terminate_active_sessions\", \"target\": \"all_unauthenticated\", \"description\": \"Revoke active web sessions and invalidate token pools\", \"confidence\": 0.72, \"risk\": \"medium\"}, {\"action\": \"quarantine_target_service\", \"target\": \"port_5000\", \"description\": \"Quarantine company web server port to isolated VLAN\", \"confidence\": 0.45, \"risk\": \"high\"}], \"recommended_action\": \"isolate_ip\"}",
+      "payload": {
+        "incident_id": "INC-19354DBE",
+        "options": [
+          {
+            "action": "isolate_ip",
+            "target": "192.168.43.103",
+            "description": "Add drop firewall rule for attacker IP 192.168.43.103 on perimeter gateway",
+            "confidence": 0.88,
+            "risk": "low"
+          },
+          {
+            "action": "terminate_active_sessions",
+            "target": "all_unauthenticated",
+            "description": "Revoke active web sessions and invalidate token pools",
+            "confidence": 0.72,
+            "risk": "medium"
+          },
+          {
+            "action": "quarantine_target_service",
+            "target": "port_5000",
+            "description": "Quarantine company web server port to isolated VLAN",
+            "confidence": 0.45,
+            "risk": "high"
+          }
+        ],
+        "recommended_action": "isolate_ip"
+      }
+    },
+    {
+      "id": "13b94fdc-ceef-464d-a5d7-ee51b8d55400",
+      "ts": "2026-08-18T08:27:58.278485+00:00",
+      "incident_id": "INC-19354DBE",
+      "source_agent": "decision",
+      "type": "decision",
+      "mitre_stage": null,
+      "confidence": 0.9,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-19354DBE\", \"outcome\": \"AUTO_EXECUTE\", \"score\": 0.9, \"reason\": \"Confidence score (0.90) met auto-execution threshold (0.75)\", \"selected_action\": \"isolate_ip\", \"target\": \"192.168.43.103\"}",
+      "payload": {
+        "incident_id": "INC-19354DBE",
+        "outcome": "AUTO_EXECUTE",
+        "score": 0.9,
+        "reason": "Confidence score (0.90) met auto-execution threshold (0.75)",
+        "selected_action": "isolate_ip",
+        "target": "192.168.43.103"
+      }
+    },
+    {
+      "id": "fada1687-d947-4ddf-b4cf-7990bd95a374",
+      "ts": "2026-08-18T08:27:59.810624+00:00",
+      "incident_id": "INC-19354DBE",
+      "source_agent": "remediation",
+      "type": "action_executed",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-19354DBE\", \"action\": \"isolate_ip\", \"target\": \"192.168.43.103\", \"status\": \"COMPLETED\", \"details\": \"[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103\", \"timestamp\": 1787041679.8105752}",
+      "payload": {
+        "incident_id": "INC-19354DBE",
+        "action": "isolate_ip",
+        "target": "192.168.43.103",
+        "status": "COMPLETED",
+        "details": "[Simulated Perimeter] IPTABLES firewall DROP rule activated for 192.168.43.103",
+        "timestamp": 1787041679.8105752
+      }
+    },
+    {
+      "id": "e7674bb7-7302-43d0-9ed3-3b0a86e91f9a",
+      "ts": "2026-08-18T08:28:01.876735+00:00",
+      "incident_id": "INC-19354DBE",
+      "source_agent": "comms",
+      "type": "report_generated",
+      "mitre_stage": null,
+      "confidence": 1.0,
+      "risk": "low",
+      "payload_json": "{\"incident_id\": \"INC-19354DBE\", \"target\": \"192.168.43.103\", \"chain\": [\"TA0006 Credential Access\"], \"outcome\": \"AUTO_EXECUTE\", \"report_text\": \"- **Executive Summary:** A brute\\u2011force credential\\u2011access attempt was detected from internal IP\\u202f192.168.43.103, generating multiple rapid failed login attempts. The attacker has not yet succeeded in obtaining valid credentials.  \\n\\n- **Impact Assessment:** No unauthorized access was achieved; systems remain secure but are at heightened risk of continued attempts.  \\n\\n- **Defense Action Taken:** Automated defenses blocked the source IP and locked the targeted accounts after the failed attempts.\", \"created_at\": 1787041681.8766918}",
+      "payload": {
+        "incident_id": "INC-19354DBE",
+        "target": "192.168.43.103",
+        "chain": [
+          "TA0006 Credential Access"
+        ],
+        "outcome": "AUTO_EXECUTE",
+        "report_text": "- **Executive Summary:** A brute\u2011force credential\u2011access attempt was detected from internal IP\u202f192.168.43.103, generating multiple rapid failed login attempts. The attacker has not yet succeeded in obtaining valid credentials.  \n\n- **Impact Assessment:** No unauthorized access was achieved; systems remain secure but are at heightened risk of continued attempts.  \n\n- **Defense Action Taken:** Automated defenses blocked the source IP and locked the targeted accounts after the failed attempts.",
+        "created_at": 1787041681.8766918
+      }
+    }
+  ]
+}
