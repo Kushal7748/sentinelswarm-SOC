@@ -225,7 +225,7 @@ export default function VoiceAssistantModal({
                 }}
               >
                 <Sparkles className="w-3.5 h-3.5 text-cyan-200" />
-                <span>▶ Start Judge Demo Briefing</span>
+                <span>▶ Play Drishti Voice Briefing</span>
               </button>
             )}
           </div>
