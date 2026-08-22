@@ -20,6 +20,7 @@ export default function SidebarNav({
   collapsed,
   onToggleCollapse,
   isConnected,
+  connectionStatus = 'DEMO',
   eventsCount,
   voiceActive,
 }) {
@@ -134,29 +135,37 @@ export default function SidebarNav({
         style={{ borderTop: '1px solid var(--col-border)' }}
       >
         <div
-          className="flex items-center gap-2 px-3 py-2 rounded-xl"
+          className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all"
           style={{
-            background: isConnected ? 'var(--col-success-pale)' : 'var(--col-danger-pale)',
-            color: isConnected ? 'var(--col-success)' : 'var(--col-danger)',
+            background: isConnected || connectionStatus === 'LIVE' 
+              ? 'var(--col-success-pale)' 
+              : (connectionStatus === 'DEMO' ? 'rgba(14,116,144,0.12)' : 'var(--col-danger-pale)'),
+            color: isConnected || connectionStatus === 'LIVE' 
+              ? 'var(--col-success)' 
+              : (connectionStatus === 'DEMO' ? 'var(--col-primary)' : 'var(--col-danger)'),
           }}
         >
-          <span
-            className="relative flex w-2 h-2 shrink-0"
-          >
-            {isConnected && (
+          <span className="relative flex w-2 h-2 shrink-0">
+            {connectionStatus !== 'RECONNECTING' && (
               <span
                 className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                style={{ background: 'var(--col-success)' }}
+                style={{ background: isConnected || connectionStatus === 'LIVE' ? 'var(--col-success)' : 'var(--col-primary)' }}
               />
             )}
             <span
               className="relative inline-flex rounded-full w-2 h-2"
-              style={{ background: isConnected ? 'var(--col-success)' : 'var(--col-danger)' }}
+              style={{
+                background: isConnected || connectionStatus === 'LIVE' 
+                  ? 'var(--col-success)' 
+                  : (connectionStatus === 'DEMO' ? 'var(--col-primary)' : 'var(--col-danger)')
+              }}
             />
           </span>
           {!collapsed && (
             <span className="text-xs font-bold tracking-wide">
-              {isConnected ? 'Context Bus LIVE' : 'Reconnecting…'}
+              {isConnected || connectionStatus === 'LIVE' 
+                ? 'Context Bus LIVE' 
+                : (connectionStatus === 'DEMO' ? 'Demo Mesh ACTIVE' : 'Reconnecting…')}
             </span>
           )}
         </div>

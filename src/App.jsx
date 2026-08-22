@@ -115,7 +115,7 @@ function SwarmTopologyView({ agentScores }) {
 /* ────────────────────────────────────────────────────────── */
 export default function App() {
   /* Data */
-  const { events, agentScores, activeIncident, recentSwaps, isConnected, refetchScores } = useSentinelWS();
+  const { events, agentScores, activeIncident, recentSwaps, isConnected, connectionStatus, refetchScores } = useSentinelWS();
 
   /* Always-on voice */
   const {
@@ -285,6 +285,7 @@ export default function App() {
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(v => !v)}
         isConnected={isConnected}
+        connectionStatus={connectionStatus}
         eventsCount={events.length}
         voiceActive={voiceActive}
       />

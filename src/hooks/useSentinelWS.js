@@ -1,16 +1,65 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { API_URL, WS_URL } from '../config/api.js';
 
+export const DEFAULT_AGENT_SCORES = {
+  'detector.phishing':  { health: 100, latency_ms: 12, drift: 0.01 },
+  'detector.intrusion': { health: 100, latency_ms: 18, drift: 0.02 },
+  'detector.exfil':     { health: 100, latency_ms: 15, drift: 0.01 },
+  'analyst':            { health: 100, latency_ms: 220, drift: 0.03 },
+  'remediation':        { health: 100, latency_ms: 45, drift: 0.01 },
+  'caution':            { health: 100, latency_ms: 30, drift: 0.01 },
+  'decision':           { health: 100, latency_ms: 85, drift: 0.02 },
+  'main_agent':         { health: 100, latency_ms: 10, drift: 0.00 }
+};
+
+export const INITIAL_DEMO_EVENTS = [
+  {
+    id: 'ev-init-3',
+    type: 'action_executed',
+    incident_id: 'INC-DEMO-001',
+    timestamp: new Date(Date.now() - 60000).toISOString(),
+    payload: {
+      action: 'FIREWALL_DROP',
+      target: '192.168.43.103',
+      result: 'CONTAINED',
+      details: 'Perimeter firewall policy automatically pushed and enforced across swarm nodes.'
+    }
+  },
+  {
+    id: 'ev-init-2',
+    type: 'decision',
+    incident_id: 'INC-DEMO-001',
+    confidence: 0.98,
+    timestamp: new Date(Date.now() - 120000).toISOString(),
+    payload: {
+      outcome: 'AUTO_EXECUTE',
+      score: 0.98,
+      reasoning: 'High-confidence attack chain match (Phishing + SQLi + Exfil). Approved by Voting Engine.'
+    }
+  },
+  {
+    id: 'ev-init-1',
+    type: 'system_ready',
+    timestamp: new Date(Date.now() - 300000).toISOString(),
+    payload: {
+      status: 'OPERATIONAL',
+      message: 'SentinelSwarm Autonomous Self-Healing SOC operational. All 8 swarm agents active.'
+    }
+  }
+];
+
 export function useSentinelWS() {
-  const [events, setEvents] = useState([]);
-  const [agentScores, setAgentScores] = useState({});
+  const [events, setEvents] = useState(INITIAL_DEMO_EVENTS);
+  const [agentScores, setAgentScores] = useState(DEFAULT_AGENT_SCORES);
   const [activeIncident, setActiveIncident] = useState(null);
   const [recentSwaps, setRecentSwaps] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState('DEMO'); // 'LIVE' | 'DEMO' | 'RECONNECTING'
+
   const wsRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
 
-  // Fetch initial state & history via REST
+  // Fetch initial state & history via REST if available
   const fetchInitialData = useCallback(async () => {
     try {
       const [eventsRes, scoresRes, incidentRes] = await Promise.allSettled([
@@ -21,12 +70,16 @@ export function useSentinelWS() {
 
       if (eventsRes.status === 'fulfilled' && eventsRes.value.ok) {
         const evs = await eventsRes.value.json();
-        setEvents(evs);
+        if (Array.isArray(evs) && evs.length > 0) {
+          setEvents(evs);
+        }
       }
 
       if (scoresRes.status === 'fulfilled' && scoresRes.value.ok) {
         const scores = await scoresRes.value.json();
-        setAgentScores(scores);
+        if (scores && Object.keys(scores).length > 0) {
+          setAgentScores(scores);
+        }
       }
 
       if (incidentRes.status === 'fulfilled' && incidentRes.value.ok) {
@@ -36,7 +89,7 @@ export function useSentinelWS() {
         }
       }
     } catch (err) {
-      console.warn('Could not fetch initial state:', err);
+      console.warn('Could not fetch initial state from API, using demo fallback:', err);
     }
   }, []);
 
@@ -51,6 +104,7 @@ export function useSentinelWS() {
 
       ws.onopen = () => {
         setIsConnected(true);
+        setConnectionStatus('LIVE');
         console.log('Connected to SentinelSwarm Context Bus WebSocket');
       };
 
@@ -73,7 +127,6 @@ export function useSentinelWS() {
           if (data.type === 'agent_swap' && data.payload?.failed_agent) {
             const failedAgent = data.payload.failed_agent;
             setRecentSwaps((prev) => [failedAgent, ...prev.filter((a) => a !== failedAgent)].slice(0, 5));
-            // Trigger visual flash
             setTimeout(() => {
               setRecentSwaps((prev) => prev.filter((a) => a !== failedAgent));
             }, 6000);
@@ -132,17 +185,25 @@ export function useSentinelWS() {
 
       ws.onclose = () => {
         setIsConnected(false);
-        reconnectTimeoutRef.current = setTimeout(connectWS, 2000);
+        const hasCustomEnv = Boolean(import.meta.env.VITE_WS_URL || import.meta.env.VITE_API_URL);
+        setConnectionStatus(hasCustomEnv ? 'RECONNECTING' : 'DEMO');
+        reconnectTimeoutRef.current = setTimeout(connectWS, 4000);
       };
 
-      ws.onerror = (err) => {
-        console.warn('WebSocket connection error, will retry...', err);
+      ws.onerror = () => {
+        const hasCustomEnv = Boolean(import.meta.env.VITE_WS_URL || import.meta.env.VITE_API_URL);
+        setConnectionStatus(hasCustomEnv ? 'RECONNECTING' : 'DEMO');
         ws.close();
       };
-    } catch (err) {
-      console.warn('Failed to establish WebSocket:', err);
-      reconnectTimeoutRef.current = setTimeout(connectWS, 2000);
+    } catch {
+      const hasCustomEnv = Boolean(import.meta.env.VITE_WS_URL || import.meta.env.VITE_API_URL);
+      setConnectionStatus(hasCustomEnv ? 'RECONNECTING' : 'DEMO');
+      reconnectTimeoutRef.current = setTimeout(connectWS, 4000);
     }
+  }, []);
+
+  const injectDemoEvent = useCallback((newEvent) => {
+    setEvents((prev) => [newEvent, ...prev.slice(0, 199)]);
   }, []);
 
   useEffect(() => {
@@ -161,6 +222,8 @@ export function useSentinelWS() {
     activeIncident,
     recentSwaps,
     isConnected,
+    connectionStatus,
+    injectDemoEvent,
     refetchScores: fetchInitialData
   };
 }
