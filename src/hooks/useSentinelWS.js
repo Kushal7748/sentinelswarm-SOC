@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { API_URL, WS_URL } from '../config/api.js';
+import { generateAttackTelemetry } from '../utils/demoSimulation.js';
 
 export const DEFAULT_AGENT_SCORES = {
   'detector.phishing':  { health: 100, latency_ms: 12, drift: 0.01 },
@@ -202,8 +203,90 @@ export function useSentinelWS() {
     }
   }, []);
 
-  const injectDemoEvent = useCallback((newEvent) => {
-    setEvents((prev) => [newEvent, ...prev.slice(0, 199)]);
+  const triggerDemoAttack = useCallback((attackType = 'full_chain', forceEscalate = true) => {
+    const { events: newEvents, incident } = generateAttackTelemetry(attackType, forceEscalate);
+    setEvents((prev) => [...newEvents.slice().reverse(), ...prev.slice(0, 199)]);
+    setActiveIncident(incident);
+    return incident;
+  }, []);
+
+  const triggerAgentDegradation = useCallback((agentName, penalty = 35) => {
+    setAgentScores((prev) => {
+      const current = prev[agentName]?.health ?? 100;
+      const newHealth = Math.max(0, current - penalty);
+      const updated = {
+        ...prev,
+        [agentName]: {
+          ...(prev[agentName] || {}),
+          health: newHealth
+        }
+      };
+
+      if (newHealth < 60) {
+        setRecentSwaps((swaps) => [agentName, ...swaps.filter((a) => a !== agentName)].slice(0, 5));
+        setTimeout(() => {
+          setRecentSwaps((swaps) => swaps.filter((a) => a !== agentName));
+        }, 6000);
+
+        setEvents((evs) => [
+          {
+            id: `ev-swap-${Date.now()}`,
+            type: 'agent_swap',
+            timestamp: new Date().toISOString(),
+            payload: {
+              failed_agent: agentName,
+              new_agent: `${agentName}_backup_v2`,
+              message: `Watchdog detected health degradation below 60%. Hot-swapped ${agentName} to backup unit.`
+            }
+          },
+          ...evs.slice(0, 199)
+        ]);
+      }
+
+      return updated;
+    });
+  }, []);
+
+  const triggerHumanAction = useCallback((incidentId, decision, targetIp = '192.168.1.8') => {
+    const dec = (decision || '').toUpperCase();
+    let newStatus = 'RESOLVED';
+    if (['INVESTIGATE', '3', 'QUARANTINE'].includes(dec) || dec.includes('INVESTIGATE') || dec.includes('QUARANTINE')) {
+      newStatus = 'UNDER_INVESTIGATION';
+    } else if (['DONT_EXECUTE', 'HOLD', '2', 'DONT_EXECUTE_AUTOMATICALLY'].includes(dec) || dec.includes('HOLD') || dec.includes('DONT')) {
+      newStatus = 'HELD_BY_HUMAN';
+    } else if (['APPROVE', 'EXECUTE', '1', 'EXECUTE_AUTOMATICALLY', 'CUSTOM_DIRECTIVE'].includes(dec) || dec.includes('EXECUTE') || dec.includes('RESOLV') || dec.includes('DIRECTIVE')) {
+      newStatus = 'RESOLVED';
+    }
+
+    setActiveIncident((prev) => ({
+      ...(prev || {}),
+      incident_id: incidentId || prev?.incident_id,
+      status: newStatus,
+      human_decision: decision
+    }));
+
+    setEvents((prev) => [
+      {
+        id: `ev-human-${Date.now()}`,
+        type: 'human_response',
+        incident_id: incidentId || 'INC-LIVE',
+        timestamp: new Date().toISOString(),
+        payload: {
+          decision,
+          target_ip: targetIp,
+          status: newStatus,
+          message: `Human directive recorded: "${decision}". Incident status updated to ${newStatus}.`
+        }
+      },
+      ...prev.slice(0, 199)
+    ]);
+  }, []);
+
+  const resetDemoState = useCallback(() => {
+    setEvents(INITIAL_DEMO_EVENTS);
+    setAgentScores(DEFAULT_AGENT_SCORES);
+    setActiveIncident(null);
+    setRecentSwaps([]);
   }, []);
 
   useEffect(() => {
@@ -223,7 +306,10 @@ export function useSentinelWS() {
     recentSwaps,
     isConnected,
     connectionStatus,
-    injectDemoEvent,
+    triggerDemoAttack,
+    triggerAgentDegradation,
+    triggerHumanAction,
+    resetDemoState,
     refetchScores: fetchInitialData
   };
 }

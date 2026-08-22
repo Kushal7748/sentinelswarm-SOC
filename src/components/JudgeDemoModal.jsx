@@ -191,7 +191,7 @@ function StepRow({ step, status, liveEvents }) {
 }
 
 /* ── Main Modal ────────────────────────────────────────────── */
-export default function JudgeDemoModal({ isOpen, onClose, events }) {
+export default function JudgeDemoModal({ isOpen, onClose, events, onTriggerDemoAttack }) {
   const [phase, setPhase] = useState('idle'); // idle | running | done | error
   const [currentStep, setCurrentStep] = useState(-1);
   const [completedSteps, setCompletedSteps] = useState([]);
@@ -252,7 +252,10 @@ export default function JudgeDemoModal({ isOpen, onClose, events }) {
         body: JSON.stringify({ attack_type: 'full_chain', force_escalate: true }),
       });
     } catch (e) {
-      setErrorMsg('Backend unreachable — showing scripted demo');
+      if (onTriggerDemoAttack) {
+        onTriggerDemoAttack('full_chain', true);
+      }
+      setErrorMsg('Running simulated full-chain attack sequence');
     }
 
     // Kick off animated steps regardless

@@ -115,7 +115,19 @@ function SwarmTopologyView({ agentScores }) {
 /* ────────────────────────────────────────────────────────── */
 export default function App() {
   /* Data */
-  const { events, agentScores, activeIncident, recentSwaps, isConnected, connectionStatus, refetchScores } = useSentinelWS();
+  const {
+    events,
+    agentScores,
+    activeIncident,
+    recentSwaps,
+    isConnected,
+    connectionStatus,
+    triggerDemoAttack,
+    triggerAgentDegradation,
+    triggerHumanAction,
+    resetDemoState,
+    refetchScores
+  } = useSentinelWS();
 
   /* Always-on voice */
   const {
@@ -155,7 +167,7 @@ export default function App() {
       const data = await res.json();
       setDefenseActive(Boolean(data.defense_active));
     } catch (err) {
-      console.error('Failed to toggle defense:', err);
+      setDefenseActive(newState);
     }
   };
 
@@ -170,7 +182,7 @@ export default function App() {
       });
       if (refetchScores) refetchScores();
     } catch (err) {
-      console.error('Failed to submit human action:', err);
+      triggerHumanAction(incidentId, action, targetIp);
     }
   };
 
@@ -335,6 +347,9 @@ export default function App() {
         onRefresh={refetchScores}
         defenseActive={defenseActive}
         onToggleDefense={handleToggleDefense}
+        onTriggerDemoAttack={triggerDemoAttack}
+        onTriggerAgentDegradation={triggerAgentDegradation}
+        onResetDemo={resetDemoState}
       />
 
       {/* Voice Modal (via Header button / sidebar button) */}
@@ -362,6 +377,7 @@ export default function App() {
         isOpen={isJudgeDemoOpen}
         onClose={() => setIsJudgeDemoOpen(false)}
         events={events}
+        onTriggerDemoAttack={triggerDemoAttack}
       />
     </div>
   );

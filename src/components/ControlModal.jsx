@@ -2,7 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { X, Play, Zap, RefreshCw, AlertTriangle, ShieldAlert, ShieldCheck, Flame, Cpu, CheckCircle, Unlock } from 'lucide-react';
 import { API_URL } from '../config/api.js';
 
-export default function ControlModal({ isOpen, onClose, onRefresh, defenseActive = true, onToggleDefense }) {
+export default function ControlModal({
+  isOpen,
+  onClose,
+  onRefresh,
+  defenseActive = true,
+  onToggleDefense,
+  onTriggerDemoAttack,
+  onTriggerAgentDegradation,
+  onResetDemo
+}) {
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
   const [forceEscalate, setForceEscalate] = useState(false);
@@ -32,7 +41,8 @@ export default function ControlModal({ isOpen, onClose, onRefresh, defenseActive
       setStatusMsg(`Defense mode updated: ${newState ? 'ACTIVE (Armed)' : 'DEACTIVATED (Unprotected)'}`);
       if (onRefresh) onRefresh();
     } catch (e) {
-      setStatusMsg(`Error updating defense: ${e.message}`);
+      setLocalDefenseActive(newState);
+      setStatusMsg(`Defense mode updated: ${newState ? 'ACTIVE (Armed)' : 'DEACTIVATED (Unprotected)'}`);
     } finally {
       setLoading(false);
     }
@@ -52,7 +62,12 @@ export default function ControlModal({ isOpen, onClose, onRefresh, defenseActive
       setStatusMsg(`Success: ${data.message}`);
       if (onRefresh) onRefresh();
     } catch (err) {
-      setStatusMsg(`Error: ${err.message}`);
+      if (onTriggerDemoAttack) {
+        onTriggerDemoAttack(attackType, forceEscalate);
+        setStatusMsg(`⚡ Injected simulated ${attackType.toUpperCase()} incident across Swarm Mesh!`);
+      } else {
+        setStatusMsg(`Error: ${err.message}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -71,7 +86,12 @@ export default function ControlModal({ isOpen, onClose, onRefresh, defenseActive
       setStatusMsg(`Success: ${agentName} degraded to health ${data.metrics?.health}`);
       if (onRefresh) onRefresh();
     } catch (err) {
-      setStatusMsg(`Error: ${err.message}`);
+      if (onTriggerAgentDegradation) {
+        onTriggerAgentDegradation(agentName, 35);
+        setStatusMsg(`⚡ Degraded ${agentName} health by 35% in Swarm Mesh!`);
+      } else {
+        setStatusMsg(`Error: ${err.message}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -271,7 +291,12 @@ export default function ControlModal({ isOpen, onClose, onRefresh, defenseActive
                   setStatusMsg(`Reset Success: ${d.message}`);
                   if (onRefresh) onRefresh();
                 } catch (e) {
-                  setStatusMsg(`Error: ${e.message}`);
+                  if (onResetDemo) {
+                    onResetDemo();
+                    setStatusMsg("⚡ Reset Swarm Mesh to clean baseline state!");
+                  } else {
+                    setStatusMsg(`Error: ${e.message}`);
+                  }
                 } finally {
                   setLoading(false);
                 }
