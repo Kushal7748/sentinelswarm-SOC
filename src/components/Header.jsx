@@ -17,7 +17,6 @@ export default function Header({
   isConnected,
   onOpenVoice,
   onRunLiveDemo,
-  onOpenJudgeDemo,
   onSelectIncident,
   events,
   eventsCount,
@@ -124,24 +123,6 @@ export default function Header({
             {voiceActive ? 'Drishti Listening…' : 'Talk to Drishti'}
           </span>
         </button>
-
-        {/* Judge Demo Button - Primary CTA */}
-        {onOpenJudgeDemo && (
-          <button
-            onClick={onOpenJudgeDemo}
-            title="Open Judge Demo — Step-by-Step Attack & Response Walkthrough"
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-black transition-all hover:scale-105 active:scale-95 cursor-pointer animate-pulse"
-            style={{
-              background: 'linear-gradient(135deg, #6366f1 0%, #0891b2 100%)',
-              color: 'white',
-              boxShadow: '0 2px 14px rgba(99,102,241,0.5)',
-              border: '1px solid rgba(99,102,241,0.4)',
-            }}
-          >
-            <Zap className="w-3.5 h-3.5 text-white" />
-            <span className="hidden md:inline">⚡ Judge Demo</span>
-          </button>
-        )}
 
         {/* Run Live Attack & Defense Demo */}
         {onRunLiveDemo && (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import Header           from './components/Header.jsx';
 import SidebarNav       from './components/SidebarNav.jsx';
@@ -14,7 +14,6 @@ import DecisionPipeline    from './components/DecisionPipeline.jsx';
 import SwarmLiveMeshView   from './components/SwarmLiveMeshView.jsx';
 import IncidentSummariesView from './components/IncidentSummariesView.jsx';
 import DemoControlView     from './components/DemoControlView.jsx';
-import JudgeDemoModal      from './components/JudgeDemoModal.jsx';
 
 import { useSentinelWS }    from './hooks/useSentinelWS.js';
 import { useAlwaysOnVoice } from './hooks/useAlwaysOnVoice.js';
@@ -148,16 +147,6 @@ export default function App() {
   const [isVoiceOpen, setIsVoiceOpen] = useState(false);
   const [selectedIncidentId, setSelectedIncidentId] = useState(null);
   const [defenseActive, setDefenseActive] = useState(true);
-  const [isJudgeDemoOpen, setIsJudgeDemoOpen] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(true);
-
-  // Auto-dismiss welcome after 60 seconds
-  useEffect(() => {
-    if (showWelcome) {
-      const t = setTimeout(() => setShowWelcome(false), 60000);
-      return () => clearTimeout(t);
-    }
-  }, [showWelcome]);
 
   // Fetch initial defense status
   React.useEffect(() => {
@@ -335,7 +324,6 @@ export default function App() {
           onOpenControl={() => setIsControlOpen(true)}
           onOpenVoice={() => setIsVoiceOpen(true)}
           onRunLiveDemo={handleRunSwarmDemo}
-          onOpenJudgeDemo={() => setIsJudgeDemoOpen(true)}
           onSelectIncident={(id) => setSelectedIncidentId(id)}
           events={events}
           eventsCount={events.length}
@@ -398,87 +386,6 @@ export default function App() {
         isOpen={!!selectedIncidentId}
         onClose={() => setSelectedIncidentId(null)}
       />
-
-      {/* Judge Demo Modal */}
-      <JudgeDemoModal
-        isOpen={isJudgeDemoOpen}
-        onClose={() => setIsJudgeDemoOpen(false)}
-        events={events}
-        onTriggerDemoAttack={triggerDemoAttack}
-        onTriggerProgressiveDemoStep={triggerProgressiveDemoStep}
-      />
-
-      {/* Welcome Overlay for Judges - shows on first visit */}
-      {showWelcome && (
-        <div
-          className="fixed inset-0 z-[300] flex items-center justify-center"
-          style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(16px)' }}
-          onClick={() => setShowWelcome(false)}
-        >
-          <div
-            className="max-w-lg mx-6 rounded-3xl overflow-hidden text-center"
-            style={{
-              background: 'linear-gradient(160deg, #0f172a 0%, #1e1b4b 100%)',
-              border: '1px solid rgba(99,102,241,0.4)',
-              boxShadow: '0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(99,102,241,0.15), 0 0 80px rgba(99,102,241,0.1)',
-            }}
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="p-8">
-              <div
-                className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5"
-                style={{
-                  background: 'linear-gradient(135deg, #6366f1 0%, #0891b2 100%)',
-                  boxShadow: '0 8px 30px rgba(99,102,241,0.5)',
-                }}
-              >
-                <span className="text-4xl">🛡️</span>
-              </div>
-              <h1 className="text-2xl font-black text-white mb-3">
-                Welcome to SentinelSwarm
-              </h1>
-              <p className="text-sm mb-1" style={{ color: '#c7d2fe', lineHeight: 1.7 }}>
-                <strong>Autonomous Self-Healing AI SOC</strong> — An 8-agent AI swarm that
-                detects, analyses, and neutralises cyber attacks in under 15 seconds.
-              </p>
-              <p className="text-xs mb-6" style={{ color: '#6b7280' }}>
-                No backend needed for this demo. Everything runs in-browser.
-              </p>
-
-              <div className="flex flex-col gap-3">
-                <button
-                  onClick={() => { setShowWelcome(false); setIsJudgeDemoOpen(true); }}
-                  className="w-full flex items-center justify-center gap-2 py-4 rounded-xl text-base font-black transition-all hover:scale-[1.03] active:scale-[0.98]"
-                  style={{
-                    background: 'linear-gradient(135deg, #6366f1 0%, #0891b2 100%)',
-                    color: 'white',
-                    boxShadow: '0 6px 30px rgba(99,102,241,0.5)',
-                    border: 'none',
-                    fontSize: '16px',
-                  }}
-                >
-                  ⚡ Start Judge Demo (Recommended)
-                </button>
-                <button
-                  onClick={() => setShowWelcome(false)}
-                  className="w-full py-3 rounded-xl text-sm font-bold transition-all hover:bg-white/5"
-                  style={{ color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}
-                >
-                  Explore Dashboard Freely
-                </button>
-              </div>
-            </div>
-
-            <div
-              className="px-8 py-4 text-xs flex items-center justify-between"
-              style={{ borderTop: '1px solid rgba(255,255,255,0.06)', color: '#475569' }}
-            >
-              <span>Built with Gemini AI · Multi-Agent Architecture</span>
-              <span className="font-mono">v2.0</span>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

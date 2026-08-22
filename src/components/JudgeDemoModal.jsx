@@ -17,7 +17,7 @@ const DEMO_SCRIPT = [
     detail: 'A real multi-vector attack is injected: Phishing email → SQL Injection on /login → Data Exfiltration of 42MB PII from 192.168.1.8',
     narration: 'An adversary launches a sophisticated 3-stage kill chain against our protected environment. The attack enters through a phishing email, pivots to SQL injection, and attempts to exfiltrate sensitive customer data.',
     what: 'WHAT\'S HAPPENING: A simulated attacker at IP 192.168.1.8 is executing a multi-stage intrusion.',
-    duration: 2800,
+    duration: 1500,
   },
   {
     id: 'detect',
@@ -27,7 +27,7 @@ const DEMO_SCRIPT = [
     detail: 'Phishing Detector + Intrusion Detector + Exfil Detector fire independently — cross-correlated on Context Bus',
     narration: 'Three specialized AI sensor agents each independently detect their part of the attack chain. They publish signals to the shared Context Bus in real-time.',
     what: 'WHAT\'S HAPPENING: The sensor mesh (3 independent AI agents) detects the attack in parallel.',
-    duration: 3000,
+    duration: 1600,
   },
   {
     id: 'analyse',
@@ -37,7 +37,7 @@ const DEMO_SCRIPT = [
     detail: 'LLM-powered Analyst correlates MITRE ATT&CK chain: T1566.001 → T1190 → T1048.003. Confidence: 94%',
     narration: 'The Analyst Agent (powered by Gemini LLM) reads all 3 sensor signals from the Context Bus and constructs a coherent MITRE ATT&CK narrative, mapping the full kill chain.',
     what: 'WHAT\'S HAPPENING: LLM reasoning synthesizes a complete attack narrative from 3 sensor signals.',
-    duration: 3200,
+    duration: 1800,
   },
   {
     id: 'remediate',
@@ -47,7 +47,7 @@ const DEMO_SCRIPT = [
     detail: 'Generated policy: IPTABLES_DROP 192.168.1.8 + patch SQLi endpoint + rotate DB credentials',
     narration: 'The Remediation Agent formulates a containment policy: block the attacker IP at the firewall, patch the vulnerable endpoint, and rotate compromised credentials — all automatically.',
     what: 'WHAT\'S HAPPENING: An autonomous policy is generated to contain the threat.',
-    duration: 2800,
+    duration: 1500,
   },
   {
     id: 'decision',
@@ -57,7 +57,7 @@ const DEMO_SCRIPT = [
     detail: 'Voting Engine: 3/3 agents agree → AUTO_EXECUTE authorized. Caution Agent safety veto: CLEAR',
     narration: 'The Decision Agent runs a consensus vote across participating agents. The Caution Agent verifies no false positive risk. With 98% confidence, autonomous execution is authorized — no human needed.',
     what: 'WHAT\'S HAPPENING: Multi-agent voting engine reaches consensus to auto-execute containment.',
-    duration: 2800,
+    duration: 1500,
   },
   {
     id: 'contain',
@@ -67,7 +67,7 @@ const DEMO_SCRIPT = [
     detail: 'FIREWALL_DROP pushed → 192.168.1.8 blocked across all edge routers. Sessions terminated. Logs archived.',
     narration: 'The Main Agent (Watchman) executes the approved containment: firewall DROP rule pushed to all edge routers, attacker sessions terminated, and forensic logs archived automatically.',
     what: 'WHAT\'S HAPPENING: Firewall rule deployed autonomously across the perimeter.',
-    duration: 2500,
+    duration: 1400,
   },
   {
     id: 'resolve',
@@ -77,7 +77,7 @@ const DEMO_SCRIPT = [
     detail: 'Full-chain attack neutralised end-to-end in <15s. All 8 swarm agents report 100% health.',
     narration: 'The entire attack was detected, analysed, decided upon, and contained — fully autonomously by the 8-agent swarm — in under 15 seconds, with zero human intervention required.',
     what: 'RESULT: Attack neutralised. Perimeter secure. All agents healthy.',
-    duration: 1500,
+    duration: 800,
   },
 ];
 
@@ -328,7 +328,7 @@ export default function JudgeDemoModal({
     }, DEMO_SCRIPT[idx].duration);
   }, [onTriggerProgressiveDemoStep]);
 
-  const startDemo = async () => {
+  const startDemo = () => {
     setPhase('running');
     setCurrentStep(-1);
     setCompletedSteps([]);
@@ -336,18 +336,14 @@ export default function JudgeDemoModal({
     setElapsedMs(0);
     setErrorMsg('');
 
-    try {
-      await fetch(`${API_URL}/api/demo/inject-attack`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ attack_type: 'full_chain', force_escalate: true }),
-      });
-    } catch (e) {
-      // This is expected on Vercel — the frontend simulates everything
-      setErrorMsg('');
-    }
+    // Fire-and-forget — don't block on backend (doesn't exist on Vercel)
+    fetch(`${API_URL}/api/demo/inject-attack`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ attack_type: 'full_chain', force_escalate: true }),
+    }).catch(() => {});
 
-    // Kick off animated steps
+    // Kick off animated steps immediately
     runStep(0);
   };
 
