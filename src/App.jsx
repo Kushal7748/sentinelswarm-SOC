@@ -123,6 +123,7 @@ export default function App() {
     isConnected,
     connectionStatus,
     triggerDemoAttack,
+    triggerProgressiveDemoStep,
     triggerAgentDegradation,
     triggerHumanAction,
     resetDemoState,
@@ -378,6 +379,7 @@ export default function App() {
         onClose={() => setIsJudgeDemoOpen(false)}
         events={events}
         onTriggerDemoAttack={triggerDemoAttack}
+        onTriggerProgressiveDemoStep={triggerProgressiveDemoStep}
       />
     </div>
   );

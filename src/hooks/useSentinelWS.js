@@ -210,6 +210,176 @@ export function useSentinelWS() {
     return incident;
   }, []);
 
+  const triggerProgressiveDemoStep = useCallback((stepIdx, incidentId = 'INC-LIVE-DEMO') => {
+    const timestamp = new Date().toISOString();
+    const attackerIp = '192.168.1.8';
+
+    switch (stepIdx) {
+      case 0: // Injecting
+        setEvents((prev) => [
+          {
+            id: `ev-step-0-${Date.now()}`,
+            type: 'detection',
+            incident_id: incidentId,
+            timestamp,
+            payload: {
+              sensor: 'phishing',
+              reason: 'Full-chain multi-stage ingress payload detected on port 5000',
+              source_ip: attackerIp,
+              target: 'COMPANY_GATEWAY'
+            }
+          },
+          ...prev.slice(0, 199)
+        ]);
+        setActiveIncident({
+          incident_id: incidentId,
+          attacker_ip: attackerIp,
+          narrative: 'Full-chain multi-stage ingress payload detected across perimeter sensors.',
+          mitre_chain: ['T1566.001'],
+          outcome: 'ANALYZING',
+          status: 'IN_PROGRESS'
+        });
+        break;
+
+      case 1: // Detecting
+        setEvents((prev) => [
+          {
+            id: `ev-step-1b-${Date.now()}`,
+            type: 'detection',
+            incident_id: incidentId,
+            timestamp,
+            payload: {
+              sensor: 'exfil',
+              reason: 'Encrypted 45MB burst directed to exfil listener on port 9000',
+              source_ip: attackerIp
+            }
+          },
+          {
+            id: `ev-step-1a-${Date.now()}`,
+            type: 'detection',
+            incident_id: incidentId,
+            timestamp: new Date(Date.now() - 500).toISOString(),
+            payload: {
+              sensor: 'intrusion',
+              reason: 'SQL injection payload detected on web portal endpoint /auth',
+              source_ip: attackerIp
+            }
+          },
+          ...prev.slice(0, 199)
+        ]);
+        setActiveIncident((prev) => ({
+          ...(prev || {}),
+          incident_id: incidentId,
+          mitre_chain: ['T1566.001', 'T1190', 'T1048.003']
+        }));
+        break;
+
+      case 2: // Correlating
+        setEvents((prev) => [
+          {
+            id: `ev-step-2-${Date.now()}`,
+            type: 'analysis',
+            incident_id: incidentId,
+            timestamp,
+            payload: {
+              attacker_ip: attackerIp,
+              narrative: 'Correlated full-chain intrusion: Phishing dropper -> SQLi database dump -> Data exfiltration. Confidence: 94%',
+              mitre_chain: ['T1566.001', 'T1190', 'T1048.003']
+            }
+          },
+          ...prev.slice(0, 199)
+        ]);
+        break;
+
+      case 3: // Remediation Proposing
+        setEvents((prev) => [
+          {
+            id: `ev-step-3-${Date.now()}`,
+            type: 'remediation_proposal',
+            incident_id: incidentId,
+            timestamp,
+            payload: {
+              recommended_action: 'IPTABLES_DROP',
+              attacker_ip: attackerIp,
+              reason: 'Formulated policy rule: Isolate IP 192.168.1.8 and terminate database session.'
+            }
+          },
+          ...prev.slice(0, 199)
+        ]);
+        break;
+
+      case 4: // Decision Agent
+        setEvents((prev) => [
+          {
+            id: `ev-step-4-${Date.now()}`,
+            type: 'decision',
+            incident_id: incidentId,
+            confidence: 0.98,
+            timestamp,
+            payload: {
+              outcome: 'AUTO_EXECUTE',
+              score: 0.98,
+              reasoning: 'Voting engine consensus reached (98% confidence). Autonomous containment authorized.'
+            }
+          },
+          ...prev.slice(0, 199)
+        ]);
+        setActiveIncident((prev) => ({
+          ...(prev || {}),
+          outcome: 'AUTO_EXECUTE',
+          score: 0.98,
+          status: 'IN_PROGRESS'
+        }));
+        break;
+
+      case 5: // Containment
+        setEvents((prev) => [
+          {
+            id: `ev-step-5-${Date.now()}`,
+            type: 'action_executed',
+            incident_id: incidentId,
+            timestamp,
+            payload: {
+              action: 'FIREWALL_DROP',
+              target: attackerIp,
+              result: 'CONTAINED',
+              details: 'IPTABLES DROP rule pushed. Attacker IP 192.168.1.8 blocked across perimeter routers.'
+            }
+          },
+          ...prev.slice(0, 199)
+        ]);
+        setActiveIncident((prev) => ({
+          ...(prev || {}),
+          status: 'RESOLVED',
+          action_executed: {
+            action: 'FIREWALL_DROP',
+            target: attackerIp,
+            result: 'CONTAINED'
+          }
+        }));
+        break;
+
+      case 6: // Resolved
+        setEvents((prev) => [
+          {
+            id: `ev-step-6-${Date.now()}`,
+            type: 'system_ready',
+            incident_id: incidentId,
+            timestamp,
+            payload: {
+              status: 'OPERATIONAL',
+              message: 'Full-chain incident neutralised in <12s. Perimeter secure. All 8 agents operating at 100% health.'
+            }
+          },
+          ...prev.slice(0, 199)
+        ]);
+        break;
+
+      default:
+        break;
+    }
+  }, []);
+
   const triggerAgentDegradation = useCallback((agentName, penalty = 35) => {
     setAgentScores((prev) => {
       const current = prev[agentName]?.health ?? 100;
@@ -307,6 +477,7 @@ export function useSentinelWS() {
     isConnected,
     connectionStatus,
     triggerDemoAttack,
+    triggerProgressiveDemoStep,
     triggerAgentDegradation,
     triggerHumanAction,
     resetDemoState,

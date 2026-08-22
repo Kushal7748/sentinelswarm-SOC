@@ -191,7 +191,13 @@ function StepRow({ step, status, liveEvents }) {
 }
 
 /* ── Main Modal ────────────────────────────────────────────── */
-export default function JudgeDemoModal({ isOpen, onClose, events, onTriggerDemoAttack }) {
+export default function JudgeDemoModal({
+  isOpen,
+  onClose,
+  events,
+  onTriggerDemoAttack,
+  onTriggerProgressiveDemoStep
+}) {
   const [phase, setPhase] = useState('idle'); // idle | running | done | error
   const [currentStep, setCurrentStep] = useState(-1);
   const [completedSteps, setCompletedSteps] = useState([]);
@@ -231,11 +237,14 @@ export default function JudgeDemoModal({ isOpen, onClose, events, onTriggerDemoA
       return;
     }
     setCurrentStep(idx);
+    if (onTriggerProgressiveDemoStep) {
+      onTriggerProgressiveDemoStep(idx);
+    }
     stepTimeoutRef.current = setTimeout(() => {
       setCompletedSteps(prev => [...prev, idx]);
       runStep(idx + 1);
     }, DEMO_SCRIPT[idx].duration);
-  }, []);
+  }, [onTriggerProgressiveDemoStep]);
 
   const startDemo = async () => {
     setPhase('running');
@@ -252,13 +261,10 @@ export default function JudgeDemoModal({ isOpen, onClose, events, onTriggerDemoA
         body: JSON.stringify({ attack_type: 'full_chain', force_escalate: true }),
       });
     } catch (e) {
-      if (onTriggerDemoAttack) {
-        onTriggerDemoAttack('full_chain', true);
-      }
-      setErrorMsg('Running simulated full-chain attack sequence');
+      setErrorMsg('Running simulated full-chain attack sequence across Swarm Mesh');
     }
 
-    // Kick off animated steps regardless
+    // Kick off animated steps
     runStep(0);
   };
 
