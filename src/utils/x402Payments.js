@@ -3,7 +3,13 @@
  * Implements HTTP 402 Payment Required protocol for decentralized threat intel queries.
  * Connects directly to Algonode Testnet API for real live on-chain signing, broadcast & verification.
  */
+import { Buffer } from 'buffer';
 import algosdk from 'algosdk';
+
+if (typeof window !== 'undefined') {
+  window.Buffer = window.Buffer || Buffer;
+  window.global = window.global || window;
+}
 
 export const COMMERCE_AGENT_MNEMONIC = "glow load pause slot envelope diesel suggest judge guess minute flush stable trick attack plastic spin clown good private alley defy impulse yellow about tornado";
 export const COMMERCE_AGENT_ALGO_ADDRESS = '4XBSZDU442IQTB5W3LQ5JSN6Q6U3MUH2VQ4Q4X7ZYNEAMWADB4OTWE63ZU';

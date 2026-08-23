@@ -10,12 +10,14 @@
   },
   "dependencies": {
     "algosdk": "^3.7.0",
+    "buffer": "^6.0.3",
     "clsx": "^2.1.0",
     "lucide-react": "^0.363.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "recharts": "^2.12.3",
-    "tailwind-merge": "^2.2.2"
+    "tailwind-merge": "^2.2.2",
+    "vite-plugin-node-polyfills": "^0.28.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
