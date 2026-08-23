@@ -8,6 +8,7 @@ const EVENT_HUMAN_TITLES = {
   'veto':                 { title: 'Caution Agent Safety Audit Evaluated', color: '#be123c', bg: 'rgba(255,228,230,0.5)', border: 'rgba(190,18,60,0.3)' },
   'decision':             { title: 'Governed Consensus Decision Reached', color: '#0891b2', bg: 'rgba(207,250,254,0.5)', border: 'rgba(8,145,178,0.3)' },
   'action_executed':      { title: 'Perimeter Containment Block Executed', color: '#047857', bg: 'rgba(209,250,229,0.5)', border: 'rgba(4,120,87,0.3)' },
+  'payment':              { title: 'x402 Algorand On-Chain Micropayment Settled', color: '#059669', bg: 'rgba(209,250,229,0.7)', border: 'rgba(5,150,105,0.4)' },
   'agent_score_update':   { title: 'Agent Swarm Health Score Updated', color: '#78716c', bg: 'rgba(248,247,244,0.8)', border: 'rgba(197,190,181,0.4)' },
   'agent_swap':           { title: 'Self-Healing Watchdog Hot-Swap Triggered', color: '#be123c', bg: 'rgba(255,228,230,0.7)', border: 'rgba(190,18,60,0.5)' },
   'system_ready':         { title: 'SentinelSwarm Core Engine Online & Ready', color: '#047857', bg: 'rgba(209,250,229,0.5)', border: 'rgba(4,120,87,0.3)' },
@@ -44,6 +45,8 @@ export default function LiveEventFeed({ events }) {
         return `Consensus vote complete: Outcome '${payload.outcome || 'AUTO_EXECUTE'}' (Score: ${Math.round((ev.confidence || 0.98) * 100)}%). Action dispatched to firewall.`;
       case 'action_executed':
         return `IPTABLES firewall DROP rule activated for ${payload.target || '192.168.43.103'}. Perimeter containment verified.`;
+      case 'payment':
+        return `x402 Algorand Testnet micropayment confirmed ($0.01 ALGO/USDC). Threat intel enriched for IP ${payload.target_ip || payload.ip || '192.168.1.8'}. TxID: ${payload.tx_hash || 'PW6B4HW7…'}`;
       case 'agent_score_update':
         return `Watchdog updated health metric for ${payload.agent || 'agent'}: Score ${payload.metrics?.health ?? 100}%.`;
       case 'agent_swap':

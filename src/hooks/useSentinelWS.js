@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { API_URL, WS_URL } from '../config/api.js';
 import { generateAttackTelemetry } from '../utils/demoSimulation.js';
+import { broadcastLiveAlgorandPayment, ALGO_EXPLORER_BASE } from '../utils/x402Payments.js';
 
 export const DEFAULT_AGENT_SCORES = {
   'detector.phishing':  { health: 100, latency_ms: 12, drift: 0.01 },
@@ -291,7 +292,32 @@ export function useSentinelWS() {
         ]);
         break;
 
-      case 3: // Remediation Proposing
+      case 3: // Remediation Proposing + Live x402 Algorand Micropayment
+        // Broadcast real on-chain Algorand Testnet payment asynchronously
+        broadcastLiveAlgorandPayment(attackerIp, 0.01).then((txRecord) => {
+          if (txRecord && txRecord.tx_hash) {
+            setEvents((evs) => [
+              {
+                id: `ev-x402-${Date.now()}`,
+                type: 'payment',
+                source_agent: 'commerce',
+                incident_id: incidentId,
+                timestamp: new Date().toISOString(),
+                payload: {
+                  action: 'X402_MICROPAYMENT_CONFIRMED',
+                  amount: '0.01 ALGO',
+                  network: 'Algorand Testnet',
+                  target_ip: attackerIp,
+                  tx_hash: txRecord.tx_hash,
+                  explorer_url: `${ALGO_EXPLORER_BASE}/tx/${txRecord.tx_hash}`,
+                  details: `On-chain Algorand Testnet micropayment confirmed: 0.01 ALGO settled to query threat intel on ${attackerIp}.`
+                }
+              },
+              ...evs.slice(0, 199)
+            ]);
+          }
+        }).catch(() => {});
+
         setEvents((prev) => [
           {
             id: `ev-step-3-${Date.now()}`,
@@ -301,7 +327,7 @@ export function useSentinelWS() {
             payload: {
               recommended_action: 'IPTABLES_DROP',
               attacker_ip: attackerIp,
-              reason: 'Formulated policy rule: Isolate IP 192.168.1.8 and terminate database session.'
+              reason: 'Formulated policy rule: Isolate IP 192.168.1.8 and broadcast x402 micropayment on Algorand Testnet.'
             }
           },
           ...prev.slice(0, 199)

@@ -9,11 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "algosdk": "^3.7.0",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.363.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "lucide-react": "^0.363.0",
     "recharts": "^2.12.3",
-    "clsx": "^2.1.0",
     "tailwind-merge": "^2.2.2"
   },
   "devDependencies": {
